@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const levelMap = ['somehow', '', 'very'];
 
@@ -17,10 +18,10 @@ export default class Tag extends React.Component {
                 borderRadius: 20
             },
             text: {
-                color: 'white'
+                color: 'white',
             },
             icon: {
-                marginLeft: 5
+                marginLeft: 2
             }
         });
     }
@@ -32,7 +33,7 @@ export default class Tag extends React.Component {
             <TouchableOpacity style={tag} onPress={this.props.onPress}>
                 <Text style={text}> {`${levelMap[level] || ''} ${name}`} </Text>
                 {this.props.selected && (
-                    <Text> ˟ </Text>
+                    <Icon style={[icon, text]} name="close" size={15} />
                 )}
             </TouchableOpacity>
         );

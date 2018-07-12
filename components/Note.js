@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     TextInput
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Note extends React.Component {
     constructor(props) {
@@ -50,8 +51,8 @@ class Note extends React.Component {
         return (
             <View>
                 <Text style={styles.title}> Note </Text>
-                <TouchableOpacity>
-                    <Text> ✎ </Text>
+                <TouchableOpacity onPress={() => this.setState({editing: true})}>
+                    <Icon name="edit" size={30}/>
                 </TouchableOpacity>
                 <Text> {this.state.text} </Text>
             </View>
