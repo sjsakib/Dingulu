@@ -23,27 +23,18 @@ class Day extends React.Component {
         this.state = {
             date: new Date(),
             isReady: false,
-            active: null
+            active: null // the current tag selected for level selection
         };
     }
 
     componentDidMount() {
-        this.save();
         this.load();
     }
 
-    async save() {
-        const res = await AsyncStorage.setItem(
-            'taggs',
-            JSON.stringify(defaultTags)
-        );
-    }
-
+    // load all the tags and and data of the day from storage
     async load() {
-        console.log('started loading');
         const tagsString = await AsyncStorage.getItem('tags');
         const tags = tagsString ? JSON.parse(tagsString) : defaultTags;
-        console.log('tagsString');
 
         const dataStrig = await AsyncStorage.getItem(
             this.state.date.toLocaleDateString()
@@ -52,8 +43,11 @@ class Day extends React.Component {
             ? JSON.parse(dataStrig)
             : { selected: [], note: '' };
 
+        // have to filter the tags already selected
+        const selectedNames = selected.map(t => t.name);
+
         this.setState({
-            tags,
+            tags: tags.filter(t => !selectedNames.includes(t.name)),
             selected: selected,
             note: note,
             isReady: true
@@ -76,13 +70,15 @@ class Day extends React.Component {
         });
     }
 
+    // remove a tag by index from the selected tags and
+    // add that tag with level 1 in all tags
     removeTag(i) {
         const selected = this.state.selected.slice();
         const tag = selected[i];
-        selected.splice(i, 1);
         tag.level = 1;
+        selected.splice(i, 1);
         this.setState({
-            selected: selected,
+            selected,
             tags: [...this.state.tags, tag]
         });
     }
@@ -109,12 +105,12 @@ class Day extends React.Component {
         }
 
         return (
-            <View>
+            <View style={styles.container}>
                 <View style={styles.segment}>
                     <Text style={styles.question}>How was the day?</Text>
                     <View style={styles.tags}>{selected}</View>
                 </View>
-                <View style={styles.tags}>{tags}</View>
+                <View style={[styles.tags, styles.segment]}>{tags}</View>
                 <Note
                     updateNote={this.updateNote.bind(this)}
                     text={this.state.note}
@@ -138,8 +134,8 @@ const styles = StyleSheet.create({
     segment: {
         backgroundColor: 'white',
         padding: 15,
-        borderBottomWidth: 2,
-        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
         display: 'flex'
     },
     tags: {

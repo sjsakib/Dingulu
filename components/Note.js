@@ -5,6 +5,7 @@ import {
     View,
     StyleSheet,
     TouchableOpacity,
+    ScrollView,
     TextInput
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -18,16 +19,9 @@ class Note extends React.Component {
         };
     }
 
-    handleChange(text) {
-        console.log(text);
-        this.setState({
-            text
-        });
-    }
-
     handleSave() {
         this.props.updateNote(this.state.text);
-        this.setState({editing: false});
+        this.setState({ editing: false });
     }
 
     render() {
@@ -39,22 +33,31 @@ class Note extends React.Component {
                         multiline={true}
                         defaultValue={this.state.text}
                         numberOfLines={10}
-                        onChangeText={(text) => this.handleChange(text)}
+                        autoFocus={true}
+                        placeholder="Type your note here"
+                        onChangeText={text => this.setState({text})}
                     />
-                    <Button
-                        title="Save"
-                        onPress={() => this.handleSave()}
-                    />
+                    <Button title="Save" onPress={() => this.handleSave()} />
                 </View>
             );
         }
+
+        const noteText = this.props.text;
+        const iconName = noteText ? 'edit' : 'add';
+        const text = noteText || <Text>(No note)</Text>;
         return (
-            <View>
-                <Text style={styles.title}> Note </Text>
-                <TouchableOpacity onPress={() => this.setState({editing: true})}>
-                    <Icon name="edit" size={30}/>
-                </TouchableOpacity>
-                <Text> {this.state.text} </Text>
+            <View style={styles.note}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Note</Text>
+                    <TouchableOpacity
+                        style={styles.editIcon}
+                        onPress={() => this.setState({ editing: true })}>
+                        <Icon name={iconName} size={30} />
+                    </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.noteText}>
+                    <Text>{text}</Text>
+                </ScrollView>
             </View>
         );
     }
@@ -73,11 +76,23 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, .95)'
     },
     input: {
-        height: 200,
-        fontSize: 15,
+        flex: 1,
+        padding: 15
     },
     title: {
-        fontSize: 24,
+        fontSize: 24
+    },
+    note: {
+        flex: 1,
+        backgroundColor: 'white',
+        padding: 15
+    },
+    noteText: {
+        marginTop: 10
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 });
 

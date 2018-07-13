@@ -1,33 +1,34 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import Tag from './Tag';
 
-// returns three different tags from one with different levels
+// returns three different tags from one tag with different levels
 function levelTag(tag, addTag) {
     const leveledTags = [];
     for (let i = 0; i < 3; i++) {
         const leveledTag = { ...tag, level: i };
         leveledTags.push(
-            <Tag
-                onPress={() => addTag(leveledTag)}
-                key={i}
-                tag={leveledTag}
-            />
+            <Tag onPress={() => addTag(leveledTag)} key={i} tag={leveledTag} />
         );
     }
     return leveledTags;
 }
 
-const LevelOptions = props => {
-    return (
-        <View style={styles.overlay}>
-            {levelTag(props.tag, props.addTag)}
-            <TouchableOpacity onPress={props.onCancel}>
-                <Text> + </Text>
-            </TouchableOpacity>
-        </View>
-    );
-};
+const LevelOptions = props => (
+    <View style={styles.overlay}>
+        {levelTag(props.tag, props.addTag)}
+        <TouchableOpacity
+            onPress={props.onCancel}
+            style={{
+                backgroundColor: props.tag.color,
+                padding: 10,
+                borderRadius: 20
+            }}>
+            <Icon color="white" name="close" />
+        </TouchableOpacity>
+    </View>
+);
 
 const styles = StyleSheet.create({
     overlay: {
