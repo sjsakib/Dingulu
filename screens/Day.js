@@ -54,6 +54,15 @@ class Day extends React.Component {
         });
     }
 
+    async save() {
+        const { selected, note, date } = this.state;
+        await AsyncStorage.setItem(
+            date.toLocaleDateString(),
+            JSON.stringify({ selected, note })
+        );
+        console.log('saved');
+    }
+
     activateTag(tag) {
         this.setState({
             active: tag
@@ -67,7 +76,7 @@ class Day extends React.Component {
             selected: [...this.state.selected, tag],
             tags,
             active: null
-        });
+        }, () => this.save());
     }
 
     // remove a tag by index from the selected tags and
@@ -80,13 +89,13 @@ class Day extends React.Component {
         this.setState({
             selected,
             tags: [...this.state.tags, tag]
-        });
+        }, () => this.save());
     }
 
     updateNote(note) {
         this.setState({
             note
-        });
+        }, () => this.save());
     }
 
     render() {
