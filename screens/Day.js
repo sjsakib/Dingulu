@@ -60,7 +60,6 @@ class Day extends React.Component {
             date.toLocaleDateString(),
             JSON.stringify({ selected, note })
         );
-        console.log('saved');
     }
 
     activateTag(tag) {
