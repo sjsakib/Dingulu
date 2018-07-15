@@ -31,7 +31,7 @@ export default class Tag extends React.Component {
         const { name, level } = this.props.tag;
         return (
             <TouchableOpacity style={tag} onPress={this.props.onPress}>
-                <Text style={text}> {`${levelMap[level] || ''} ${name}`} </Text>
+                <Text style={text}> {`${levelMap[level] || ''} ${name}`.toUpperCase()} </Text>
                 {this.props.selected && (
                     <Icon style={[icon, text]} name="close" size={15} />
                 )}
