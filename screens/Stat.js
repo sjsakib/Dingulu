@@ -13,7 +13,7 @@ import populate from '../populate';
 class Stat extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         drawerLabel: '',
-        headerTitle: new Date().toDateString(),
+        headerTitle: 'Stats',
         headerLeft: <HeaderIcon navigation={navigation} />
     });
 
@@ -42,19 +42,23 @@ class Stat extends React.Component {
         }
         const pairs = await AsyncStorage.multiGet(dates);
 
-        const total = pairs.length;
+        let total = pairs.length;
 
         const tags = {};
-        console.log(pairs);
 
         pairs.forEach(([d, str]) => {
             const data = JSON.parse(str);
 
-            console.log(data);
+            if (!data) {
+                total--;
+                return;
+            }
+
             data.selected.forEach(({ name, level, color }) => {
                 if (tags[name] === undefined) {
                     tags[name] = {
                         count: 0,
+                        color,
                         levels: [
                             { count: 0, dates: [] },
                             { count: 0, dates: [] },
@@ -64,11 +68,11 @@ class Stat extends React.Component {
                 }
                 const tag = tags[name];
                 tag.count++;
-                tag.percentage = (tag.count / total * 100).toFixed(2);
+                tag.percentage = Math.round(tag.count / total * 100);
                 
                 const lTag = tag.levels[level];
                 lTag.count++;
-                lTag.percentage = (lTag.count / total * 100).toFixed(2);
+                lTag.percentage = Math.round(lTag.count / total * 100);
                 lTag.dates.push(d);
             });
         });
@@ -79,7 +83,6 @@ class Stat extends React.Component {
         });
 
         tagList.sort((t1, t2) => t1.count < t2.count);
-        console.log(tagList);
 
         this.setState({
             data: tagList,
@@ -93,7 +96,7 @@ class Stat extends React.Component {
         return (
             <FlatList
                 data={this.state.data}
-                renderItem={({ item }) => <TagListItem key={item.name} {...item} />}
+                renderItem={({ item }) => <TagListItem {...item} />}
                 keyExtractor={item => item.name}
             />
         );
