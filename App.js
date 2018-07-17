@@ -6,10 +6,10 @@ import Stat from './screens/Stat'
 
 const Days = createDrawerNavigator({
     Day: {
-        screen: createStackNavigator({ Day: Day })
+        screen: Day
     },
     Stat: {
-        screen: createStackNavigator({ Stat: Stat })
+        screen: Stat
     },
 });
 

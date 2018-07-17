@@ -6,16 +6,17 @@ import {
     StyleSheet,
     AsyncStorage,
     ActivityIndicator,
-    ScrollView
+    TouchableOpacity,
+    ScrollView,
+    DatePickerAndroid,
 } from 'react-native';
 import { Tag, Note, LevelOptions, HeaderIcon } from '../components';
 import { defaultTags } from '../constants';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Today',
-        headerTitle: new Date().toDateString(),
-        headerLeft: <HeaderIcon navigation={navigation} />
+        drawerLabel: 'Day',
     });
 
     constructor(props) {
@@ -71,11 +72,14 @@ class Day extends React.Component {
     addTag(tag) {
         const tags = this.state.tags.slice();
         tags.splice(tags.map(t => t.name).indexOf(tag.name), 1);
-        this.setState({
-            selected: [...this.state.selected, tag],
-            tags,
-            active: null
-        }, () => this.save());
+        this.setState(
+            {
+                selected: [...this.state.selected, tag],
+                tags,
+                active: null
+            },
+            () => this.save()
+        );
     }
 
     // remove a tag by index from the selected tags and
@@ -85,16 +89,33 @@ class Day extends React.Component {
         const tag = selected[i];
         tag.level = 1;
         selected.splice(i, 1);
-        this.setState({
-            selected,
-            tags: [...this.state.tags, tag]
-        }, () => this.save());
+        this.setState(
+            {
+                selected,
+                tags: [...this.state.tags, tag]
+            },
+            () => this.save()
+        );
     }
 
     updateNote(note) {
+        this.setState(
+            {
+                note
+            },
+            () => this.save()
+        );
+    }
+
+    async setDate() {
+        const { action, year, month, day } = await DatePickerAndroid.open({date: this.state.date});
+        if (action === DatePickerAndroid.dismissedAction) return;
+        console.log(year, month, day);
         this.setState({
-            note
-        }, () => this.save());
+            date: new Date(year, month, day),
+            isReady: false,
+        });
+        this.load();
     }
 
     render() {
@@ -112,8 +133,23 @@ class Day extends React.Component {
             selected = <Text>Select one or more tag</Text>;
         }
 
+        
+        const dateString = this.state.date.toLocaleDateString('en-US', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+
         return (
             <View style={styles.container}>
+                <View style={styles.header}>
+                    <HeaderIcon navigation={this.props.navigation} />
+                    <Text style={styles.headerText}>{dateString}</Text>
+                    <TouchableOpacity onPress={() => this.setDate()}>
+                        <Icon name="event" size={26} />
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.segment}>
                     <Text style={styles.question}>How was the day?</Text>
                     <View style={styles.tags}>{selected}</View>
@@ -152,6 +188,17 @@ const styles = StyleSheet.create({
     },
     question: {
         fontSize: 24
+    },
+    header: {
+        fontSize: 30,
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    },
+    headerText: {
+        fontSize: 20,
+        fontWeight: "400",
     }
 });
 
