@@ -124,7 +124,7 @@ class Stat extends React.Component {
             </View>
             <FlatList
                 data={this.state.data}
-                renderItem={({ item }) => <TagListItem {...item} />}
+                renderItem={({ item }) => <TagListItem navigate={this.props.navigation.navigate} {...item} />}
                 keyExtractor={item => item.name}
             />
             </View>

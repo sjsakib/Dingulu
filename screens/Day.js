@@ -21,8 +21,10 @@ class Day extends React.Component {
 
     constructor(props) {
         super(props);
+
+        const date = this.props.navigation.getParam('date', new Date());
         this.state = {
-            date: new Date(),
+            date,
             isReady: false,
             active: null // the current tag selected for level selection
         };
@@ -133,7 +135,6 @@ class Day extends React.Component {
             selected = <Text>Select one or more tag</Text>;
         }
 
-        
         const dateString = this.state.date.toLocaleDateString('en-US', {
             weekday: 'short',
             day: 'numeric',

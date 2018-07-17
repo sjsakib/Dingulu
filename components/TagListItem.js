@@ -20,10 +20,11 @@ const DateListItem = props => {
         month: 'long',
         year: 'numeric'
     });
+    console.log(props);
     return (
-        <View style={[styles.container, styles.grandchild]}>
+        <TouchableOpacity style={[styles.container, styles.grandchild]} onPress={() => props.navigate('Day', {date: new Date(date)})}>
             <Text>{date}</Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 
@@ -72,7 +73,7 @@ class SubTagListItem extends React.Component {
                 {this.state.expanded && (
                     <FlatList
                         data={this.props.dates}
-                        renderItem={({ item }) => <DateListItem date={item} />}
+                        renderItem={({ item }) => <DateListItem navigate={this.props.navigate} date={item} />}
                         keyExtractor={(item, index) => item}
                     />
                 )}
@@ -125,6 +126,7 @@ export default class TagListItem extends React.Component {
                             <SubTagListItem
                                 name={this.props.name}
                                 level={index}
+                                navigate={this.props.navigate}
                                 {...item}
                             />
                         )}
