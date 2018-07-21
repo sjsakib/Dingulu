@@ -40,11 +40,11 @@ class Day extends React.Component {
         const tagsString = await AsyncStorage.getItem('tags');
         const tags = tagsString ? JSON.parse(tagsString) : defaultTags;
 
-        const dataStrig = await AsyncStorage.getItem(
+        const dataString = await AsyncStorage.getItem(
             dateString(this.state.date, 'key')
         );
-        const { selected, note } = dataStrig
-            ? JSON.parse(dataStrig)
+        const { selected, note } = dataString
+            ? JSON.parse(dataString)
             : { selected: [], note: '' };
 
         // have to filter the tags already selected
@@ -129,10 +129,10 @@ class Day extends React.Component {
         const active = this.state.active;
 
         const tags = this.state.tags.map((tag, i) => (
-            <Tag onPress={() => this.activateTag(tag)} key={i} tag={tag} />
+            <Tag onPress={() => this.activateTag(tag)} key={tag.name} tag={tag} />
         ));
         let selected = this.state.selected.map((tag, i) => (
-            <Tag selected onPress={() => this.removeTag(i)} key={i} tag={tag} />
+            <Tag selected onPress={() => this.removeTag(i)} key={tag.name} tag={tag} />
         ));
         if (selected.length === 0) {
             selected = <Text>Select one or more tag</Text>;

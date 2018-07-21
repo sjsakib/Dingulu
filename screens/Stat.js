@@ -128,11 +128,11 @@ class Stat extends React.Component {
                 <View style={styles.header}>
                     <HeaderIcon navigation={this.props.navigation} />
                     <TouchableOpacity onPress={() => this.setRange('start')}>
-                        <Text>{startString}</Text>
+                        <Text style={styles.link}>{startString}</Text>
                     </TouchableOpacity>
                     <Text>to</Text>
                     <TouchableOpacity onPress={() => this.setRange('end')}>
-                        <Text>{endString}</Text>
+                        <Text style={styles.link}>{endString}</Text>
                     </TouchableOpacity>
                 </View>
                 <FlatList
@@ -175,6 +175,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
+    },
+    link: {
+        color: '#2196F3',
     }
 });
 

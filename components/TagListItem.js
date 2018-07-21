@@ -45,7 +45,7 @@ class SubTagListItem extends React.Component {
         return (
             <View>
                 <TouchableOpacity
-                    style={[styles.container, styles.child]}
+                    style={[styles.container, styles.child, {backgroundColor: this.props.color}]}
                     onPress={() => this.toggleExpansion()}>
                     <View style={styles.side}>
                         <Icon
@@ -65,7 +65,7 @@ class SubTagListItem extends React.Component {
                     </View>
                     <View style={styles.side}>
                         <Text>
-                            {this.props.count} ({this.props.percentage}%)
+                            {this.props.count}   {this.props.percentage}%
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -104,7 +104,7 @@ export default class TagListItem extends React.Component {
         return (
             <View>
                 <TouchableOpacity
-                    style={styles.container}
+                    style={[styles.container, {backgroundColor: this.props.color}]}
                     onPress={() => this.toggleExpansion()}>
                     <View style={styles.side}>
                         <Icon
@@ -114,12 +114,13 @@ export default class TagListItem extends React.Component {
                                     : 'chevron-right'
                             }
                             size={30}
+                            color={'white'}
                         />
-                        <Text>{this.props.name.toUpperCase()}</Text>
+                        <Text style={styles.white}>{this.props.name.toUpperCase()}</Text>
                     </View>
                     <View style={styles.side}>
-                        <Text>
-                            {this.props.count} ({this.props.percentage}%)
+                        <Text style={styles.white}>
+                            {this.props.count}   {this.props.percentage}%
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -131,6 +132,7 @@ export default class TagListItem extends React.Component {
                                 name={this.props.name}
                                 level={index}
                                 navigate={this.props.navigate}
+                                color={this.props.color}
                                 {...item}
                             />
                         )}
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         margin: 2,
-        borderRadius: 10
+        borderRadius: 5
     },
     side: {
         flexDirection: 'row',
@@ -162,5 +164,8 @@ const styles = StyleSheet.create({
     },
     grandchild: {
         marginLeft: 80
-    }
+    },
+    white: {
+        color: 'white',
+    },
 });
