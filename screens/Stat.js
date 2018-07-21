@@ -8,7 +8,7 @@ import {
     ActivityIndicator,
     ScrollView,
     TouchableOpacity,
-    DatePickerAndroid,
+    DatePickerAndroid
 } from 'react-native';
 import { HeaderIcon, TagListItem } from '../components';
 import populate from '../populate';
@@ -16,7 +16,7 @@ import dateString from '../utilities/dateString';
 
 class Stat extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Stat',
+        drawerLabel: 'Stat'
     });
 
     constructor(props) {
@@ -44,7 +44,7 @@ class Stat extends React.Component {
         }
         const pairs = await AsyncStorage.multiGet(dates);
 
-        let total = pairs.length;
+        let totalDays = pairs.length;
 
         const tags = {};
 
@@ -54,12 +54,12 @@ class Stat extends React.Component {
             const data = JSON.parse(str);
 
             if (!data) {
-                total--;
+                totalDays--;
                 continue;
             }
 
             for (let j = 0; j < data.selected.length; j++) {
-                const {name, level, color} = data.selected[j];
+                const { name, level, color } = data.selected[j];
 
                 if (tags[name] === undefined) {
                     tags[name] = {
@@ -74,11 +74,11 @@ class Stat extends React.Component {
                 }
                 const tag = tags[name];
                 tag.count++;
-                tag.percentage = Math.round(tag.count / total * 100);
-                
+                tag.percentage = Math.round(tag.count / totalDays * 100);
+
                 const lTag = tag.levels[level];
                 lTag.count++;
-                lTag.percentage = Math.round(lTag.count / total * 100);
+                lTag.percentage = Math.round(lTag.count / totalDays * 100);
                 lTag.dates.push(d);
             }
         }
@@ -87,18 +87,19 @@ class Stat extends React.Component {
         const names = Object.keys(tags);
         for (let i = 0; i < names.length; i++) {
             const name = names[i];
-            tagList.push({ name: name, ...tags[name]});
+            tagList.push({ name: name, ...tags[name] });
         }
 
         tagList.sort((t1, t2) => {
             if (t1.count > t2.count) return -1;
             else if (t1.count === t2.count) return 0;
             return 1;
-        })
+        });
 
         this.setState({
             data: tagList,
-            isReady: true
+            isReady: true,
+            totalDays
         });
     }
 
@@ -106,12 +107,12 @@ class Stat extends React.Component {
         const date = point === 'start' ? this.state.start : this.state.end;
         const { action, year, month, day } = await DatePickerAndroid.open({
             date,
-            maxDate: new Date(),
-        })
+            maxDate: new Date()
+        });
         if (action === DatePickerAndroid.dismissedAction) return;
         this.setState({
             [point]: new Date(year, month, day),
-            isReady: false,
+            isReady: false
         });
         this.load();
     }
@@ -124,24 +125,34 @@ class Stat extends React.Component {
 
         return (
             <View>
-            <View style={styles.header}>
-                <HeaderIcon navigation={this.props.navigation} />
-                <TouchableOpacity onPress={() => this.setRange('start')}>
-                    <Text>{startString}</Text>
-                </TouchableOpacity>
-                <Text>to</Text>
-                <TouchableOpacity onPress={() => this.setRange('end')}>
-                    <Text>{endString}</Text>
-                </TouchableOpacity>
-            </View>
-            <FlatList
-                data={this.state.data}
-                renderItem={({ item }) => <TagListItem navigate={this.props.navigation.navigate} {...item} />}
-                keyExtractor={item => item.name}
-            />
-            <ScrollView>
-                <Text> {this.state.toLog} </Text>
-            </ScrollView>
+                <View style={styles.header}>
+                    <HeaderIcon navigation={this.props.navigation} />
+                    <TouchableOpacity onPress={() => this.setRange('start')}>
+                        <Text>{startString}</Text>
+                    </TouchableOpacity>
+                    <Text>to</Text>
+                    <TouchableOpacity onPress={() => this.setRange('end')}>
+                        <Text>{endString}</Text>
+                    </TouchableOpacity>
+                </View>
+                <FlatList
+                    data={this.state.data}
+                    renderItem={({ item }) => (
+                        <TagListItem
+                            navigate={this.props.navigation.navigate}
+                            {...item}
+                        />
+                    )}
+                    keyExtractor={item => item.name}
+                    ListHeaderComponent={
+                        <View style={styles.listHeader}>
+                            <Text>Total {this.state.totalDays} days recorded</Text>
+                        </View>
+                    }
+                />
+                <ScrollView>
+                    <Text> {this.state.toLog} </Text>
+                </ScrollView>
             </View>
         );
     }
@@ -153,11 +164,17 @@ const styles = StyleSheet.create({
         height: 60,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     headerText: {
         fontSize: 20,
-        fontWeight: "400",
+        fontWeight: '400'
+    },
+    listHeader: {
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
     }
 });
 

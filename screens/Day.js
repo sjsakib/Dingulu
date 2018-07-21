@@ -8,7 +8,7 @@ import {
     ActivityIndicator,
     TouchableOpacity,
     ScrollView,
-    DatePickerAndroid,
+    DatePickerAndroid
 } from 'react-native';
 import { Tag, Note, LevelOptions, HeaderIcon } from '../components';
 import { defaultTags } from '../constants';
@@ -17,7 +17,7 @@ import dateString from '../utilities/dateString';
 
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Day',
+        drawerLabel: 'Day'
     });
 
     constructor(props) {
@@ -111,11 +111,14 @@ class Day extends React.Component {
     }
 
     async setDate() {
-        const { action, year, month, day } = await DatePickerAndroid.open({date: this.state.date});
+        const { action, year, month, day } = await DatePickerAndroid.open({
+            date: this.state.date,
+            maxDate: new Date(),
+        });
         if (action === DatePickerAndroid.dismissedAction) return;
         this.setState({
             date: new Date(year, month, day),
-            isReady: false,
+            isReady: false
         });
         this.load();
     }
@@ -190,11 +193,11 @@ const styles = StyleSheet.create({
         height: 60,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     headerText: {
         fontSize: 20,
-        fontWeight: "400",
+        fontWeight: '400'
     }
 });
 
