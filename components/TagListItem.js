@@ -54,8 +54,9 @@ class SubTagListItem extends React.Component {
                                     : 'chevron-right'
                             }
                             size={30}
+                            color="white"
                         />
-                        <Text style={{ textTransform: 'uppercase' }}>
+                        <Text style={styles.white}>
                             {leveledTag(
                                 this.props.name,
                                 this.props.level
@@ -63,7 +64,7 @@ class SubTagListItem extends React.Component {
                         </Text>
                     </View>
                     <View style={styles.side}>
-                        <Text>
+                        <Text style={styles.white}>
                             {this.props.count}   {this.props.percentage}%
                         </Text>
                     </View>
@@ -151,18 +152,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: 'white',
         padding: 10,
-        margin: 2,
-        borderRadius: 5
     },
     side: {
         flexDirection: 'row',
         alignItems: 'center'
     },
     child: {
-        marginLeft: 40
+        margin: 2,
+        borderRadius: 20
     },
     grandchild: {
-        marginLeft: 80
+        marginLeft: 20,
+        margin: 2,
+        borderRadius: 10,
     },
     white: {
         color: 'white',
