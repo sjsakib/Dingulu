@@ -13,6 +13,7 @@ import {
 import { Tag, Note, LevelOptions, HeaderIcon } from '../components';
 import { defaultTags } from '../constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import dateString from '../utilities/dateString';
 
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -40,7 +41,7 @@ class Day extends React.Component {
         const tags = tagsString ? JSON.parse(tagsString) : defaultTags;
 
         const dataStrig = await AsyncStorage.getItem(
-            this.state.date.toLocaleDateString()
+            dateString(this.state.date, 'key')
         );
         const { selected, note } = dataStrig
             ? JSON.parse(dataStrig)
@@ -60,7 +61,7 @@ class Day extends React.Component {
     async save() {
         const { selected, note, date } = this.state;
         await AsyncStorage.setItem(
-            date.toLocaleDateString(),
+            dateString(date, 'key'),
             JSON.stringify({ selected, note })
         );
     }
@@ -112,7 +113,6 @@ class Day extends React.Component {
     async setDate() {
         const { action, year, month, day } = await DatePickerAndroid.open({date: this.state.date});
         if (action === DatePickerAndroid.dismissedAction) return;
-        console.log(year, month, day);
         this.setState({
             date: new Date(year, month, day),
             isReady: false,
@@ -135,18 +135,13 @@ class Day extends React.Component {
             selected = <Text>Select one or more tag</Text>;
         }
 
-        const dateString = this.state.date.toLocaleDateString('en-US', {
-            weekday: 'short',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        });
+        const dateStr = dateString(this.state.date, 'long');
 
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
                     <HeaderIcon navigation={this.props.navigation} />
-                    <Text style={styles.headerText}>{dateString}</Text>
+                    <Text style={styles.headerText}>{dateStr}</Text>
                     <TouchableOpacity onPress={() => this.setDate()}>
                         <Icon name="event" size={26} />
                     </TouchableOpacity>

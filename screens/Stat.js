@@ -6,11 +6,13 @@ import {
     AsyncStorage,
     FlatList,
     ActivityIndicator,
+    ScrollView,
     TouchableOpacity,
     DatePickerAndroid,
 } from 'react-native';
 import { HeaderIcon, TagListItem } from '../components';
 import populate from '../populate';
+import dateString from '../utilities/dateString';
 
 class Stat extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -38,7 +40,7 @@ class Stat extends React.Component {
         const { start, end } = this.state;
         const dates = [];
         for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-            dates.push(d.toLocaleDateString());
+            dates.push(dateString(d, 'key'));
         }
         const pairs = await AsyncStorage.multiGet(dates);
 
@@ -46,15 +48,19 @@ class Stat extends React.Component {
 
         const tags = {};
 
-        pairs.forEach(([d, str]) => {
+        for (let i = 0; i < pairs.length; i++) {
+            const [d, str] = pairs[i];
+
             const data = JSON.parse(str);
 
             if (!data) {
                 total--;
-                return;
+                continue;
             }
 
-            data.selected.forEach(({ name, level, color }) => {
+            for (let j = 0; j < data.selected.length; j++) {
+                const {name, level, color} = data.selected[j];
+
                 if (tags[name] === undefined) {
                     tags[name] = {
                         count: 0,
@@ -74,15 +80,21 @@ class Stat extends React.Component {
                 lTag.count++;
                 lTag.percentage = Math.round(lTag.count / total * 100);
                 lTag.dates.push(d);
-            });
-        });
+            }
+        }
 
         const tagList = [];
-        Object.entries(tags).forEach(([tagName, data]) => {
-            tagList.push({ name: tagName, ...data });
-        });
+        const names = Object.keys(tags);
+        for (let i = 0; i < names.length; i++) {
+            const name = names[i];
+            tagList.push({ name: name, ...tags[name]});
+        }
 
-        tagList.sort((t1, t2) => t1.count < t2.count);
+        tagList.sort((t1, t2) => {
+            if (t1.count > t2.count) return -1;
+            else if (t1.count === t2.count) return 0;
+            return 1;
+        })
 
         this.setState({
             data: tagList,
@@ -107,8 +119,8 @@ class Stat extends React.Component {
     render() {
         if (!this.state.isReady) return <ActivityIndicator />;
 
-        const startString = this.state.start.toLocaleDateString('en-US', dateOptions);
-        const endString = this.state.end.toLocaleDateString('en-US', dateOptions);
+        const startString = dateString(this.state.start, 'short');
+        const endString = dateString(this.state.end, 'short');
 
         return (
             <View>
@@ -127,16 +139,13 @@ class Stat extends React.Component {
                 renderItem={({ item }) => <TagListItem navigate={this.props.navigation.navigate} {...item} />}
                 keyExtractor={item => item.name}
             />
+            <ScrollView>
+                <Text> {this.state.toLog} </Text>
+            </ScrollView>
             </View>
         );
     }
 }
-
-const dateOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-};
 
 const styles = StyleSheet.create({
     header: {

@@ -7,6 +7,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import dateString from '../utilities/dateString';
 
 function leveledTag(name, level) {
     const levelMap = ['somehow', '', 'very'];
@@ -14,16 +15,14 @@ function leveledTag(name, level) {
 }
 
 const DateListItem = props => {
-    const date = new Date(props.date).toLocaleDateString('en-US', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    });
-    console.log(props);
+    const dateStr = dateString(new Date(props.date), 'long');
     return (
-        <TouchableOpacity style={[styles.container, styles.grandchild]} onPress={() => props.navigate('Day', {date: new Date(date)})}>
-            <Text>{date}</Text>
+        <TouchableOpacity
+            style={[styles.container, styles.grandchild]}
+            onPress={() =>
+                props.navigate('Day', { date: new Date(props.date) })
+            }>
+            <Text>{dateStr}</Text>
         </TouchableOpacity>
     );
 };
@@ -73,7 +72,12 @@ class SubTagListItem extends React.Component {
                 {this.state.expanded && (
                     <FlatList
                         data={this.props.dates}
-                        renderItem={({ item }) => <DateListItem navigate={this.props.navigate} date={item} />}
+                        renderItem={({ item }) => (
+                            <DateListItem
+                                navigate={this.props.navigate}
+                                date={item}
+                            />
+                        )}
                         keyExtractor={(item, index) => item}
                     />
                 )}
@@ -130,7 +134,7 @@ export default class TagListItem extends React.Component {
                                 {...item}
                             />
                         )}
-                        keyExtractor={(item, index) => 'level-'+index}
+                        keyExtractor={(item, index) => 'level-' + index}
                     />
                 )}
             </View>
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         margin: 2,
-        borderRadius: 10,
+        borderRadius: 10
     },
     side: {
         flexDirection: 'row',
