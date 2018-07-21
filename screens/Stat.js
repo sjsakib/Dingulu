@@ -10,7 +10,7 @@ import {
     TouchableOpacity,
     DatePickerAndroid
 } from 'react-native';
-import { HeaderIcon, TagListItem } from '../components';
+import { HeaderIcon, TagListItem, DateInfo } from '../components';
 import populate from '../populate';
 import dateString from '../utilities/dateString';
 
@@ -47,6 +47,7 @@ class Stat extends React.Component {
         let totalDays = pairs.length;
 
         const tags = {};
+        const dateDict = {};
 
         for (let i = 0; i < pairs.length; i++) {
             const [d, str] = pairs[i];
@@ -57,6 +58,8 @@ class Stat extends React.Component {
                 totalDays--;
                 continue;
             }
+
+            dateDict[d] = data;
 
             for (let j = 0; j < data.selected.length; j++) {
                 const { name, level, color } = data.selected[j];
@@ -99,7 +102,8 @@ class Stat extends React.Component {
         this.setState({
             data: tagList,
             isReady: true,
-            totalDays
+            totalDays,
+            dateDict
         });
     }
 
@@ -123,6 +127,8 @@ class Stat extends React.Component {
         const startString = dateString(this.state.start, 'short');
         const endString = dateString(this.state.end, 'short');
 
+        const selectedDate = this.state.selectedDate;
+
         return (
             <View>
                 <View style={styles.header}>
@@ -139,20 +145,28 @@ class Stat extends React.Component {
                     data={this.state.data}
                     renderItem={({ item }) => (
                         <TagListItem
-                            navigate={this.props.navigation.navigate}
+                            showDate={date =>
+                                this.setState({ selectedDate: date })
+                            }
                             {...item}
                         />
                     )}
                     keyExtractor={item => item.name}
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
-                            <Text>Total {this.state.totalDays} days recorded</Text>
+                            <Text>
+                                Total {this.state.totalDays} days recorded
+                            </Text>
                         </View>
                     }
                 />
-                <ScrollView>
-                    <Text> {this.state.toLog} </Text>
-                </ScrollView>
+                {selectedDate && (
+                    <DateInfo
+                        date={selectedDate}
+                        close={() => this.setState({selectedDate: null})}
+                        {...this.state.dateDict[selectedDate]}
+                    />
+                )}
             </View>
         );
     }
@@ -174,10 +188,10 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'white'
     },
     link: {
-        color: '#2196F3',
+        color: '#2196F3'
     }
 });
 

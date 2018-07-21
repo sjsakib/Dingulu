@@ -19,9 +19,8 @@ const DateListItem = props => {
     return (
         <TouchableOpacity
             style={[styles.container, styles.grandchild]}
-            onPress={() =>
-                props.navigate('Day', { date: new Date(props.date) })
-            }>
+            onPress={() => props.showDate(props.date)}
+            >
             <Text>{dateStr}</Text>
         </TouchableOpacity>
     );
@@ -74,7 +73,7 @@ class SubTagListItem extends React.Component {
                         data={this.props.dates}
                         renderItem={({ item }) => (
                             <DateListItem
-                                navigate={this.props.navigate}
+                                showDate={this.props.showDate}
                                 date={item}
                             />
                         )}
@@ -131,7 +130,7 @@ export default class TagListItem extends React.Component {
                             <SubTagListItem
                                 name={this.props.name}
                                 level={index}
-                                navigate={this.props.navigate}
+                                showDate={this.props.showDate}
                                 color={this.props.color}
                                 {...item}
                             />
