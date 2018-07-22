@@ -11,6 +11,7 @@ import {
     DatePickerAndroid
 } from 'react-native';
 import { HeaderIcon, TagListItem, DateInfo } from '../components';
+import { defaultTagColors } from '../constants';
 import populate from '../populate';
 import dateString from '../utilities/dateString';
 
@@ -44,6 +45,10 @@ class Stat extends React.Component {
         }
         const pairs = await AsyncStorage.multiGet(dates);
 
+        const tagColors =
+            JSON.parse(await AsyncStorage.getItem('tagColors')) ||
+            defaultTagColors;
+
         let totalDays = pairs.length;
 
         const tags = {};
@@ -67,7 +72,7 @@ class Stat extends React.Component {
                 if (tags[name] === undefined) {
                     tags[name] = {
                         count: 0,
-                        color,
+                        color: tagColors[name],
                         levels: [
                             { count: 0, dates: [] },
                             { count: 0, dates: [] },
@@ -103,7 +108,8 @@ class Stat extends React.Component {
             data: tagList,
             isReady: true,
             totalDays,
-            dateDict
+            dateDict,
+            tagColors
         });
     }
 
@@ -163,7 +169,8 @@ class Stat extends React.Component {
                 {selectedDate && (
                     <DateInfo
                         date={selectedDate}
-                        close={() => this.setState({selectedDate: null})}
+                        tagColors={this.state.tagColors}
+                        close={() => this.setState({ selectedDate: null })}
                         {...this.state.dateDict[selectedDate]}
                     />
                 )}

@@ -14,7 +14,7 @@ const DateInfo = props => {
     const dateStr = dateString(new Date(props.date), 'long');
 
     const tags = props.selected.map((tag, i) => (
-        <Tag key={tag.name} tag={tag} />
+        <Tag key={tag.name} tag={tag} color={props.tagColors[tag.name]} />
     ));
 
     return (
@@ -27,7 +27,9 @@ const DateInfo = props => {
                         <Text style={styles.note}>{props.note}</Text>
                     </ScrollView>
                 </View>
-                <TouchableOpacity style={styles.closeButton} onPress={props.close}>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={props.close}>
                     <Icon name="close" size={32} />
                 </TouchableOpacity>
             </View>
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
         paddingRight: 20
     },
     date: {
-        fontSize: 24,
+        fontSize: 24
     },
     tags: {
         margin: 20,
@@ -64,13 +66,13 @@ const styles = StyleSheet.create({
     },
     bottom: {
         flex: 1,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     noteContainer: {
-        flex: 5,
+        flex: 5
     },
     closeButton: {
-        flex: 1,
+        flex: 1
     }
 });
 

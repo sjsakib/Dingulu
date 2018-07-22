@@ -12,13 +12,13 @@ export default class Tag extends React.Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: props.tag.color,
+                backgroundColor: props.color,
                 padding: 10,
                 margin: 5,
                 borderRadius: 20
             },
             text: {
-                color: 'white',
+                color: 'white'
             },
             icon: {
                 marginLeft: 2
@@ -31,7 +31,9 @@ export default class Tag extends React.Component {
         const { name, level } = this.props.tag;
         return (
             <TouchableOpacity style={tag} onPress={this.props.onPress}>
-                <Text style={text}> {`${levelMap[level] || ''} ${name}`.toUpperCase()} </Text>
+                <Text style={text}>
+                    {`${levelMap[level] || ''} ${name}`.toUpperCase()}{' '}
+                </Text>
                 {this.props.selected && (
                     <Icon style={[icon, text]} name="close" size={15} />
                 )}

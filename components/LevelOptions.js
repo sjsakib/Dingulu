@@ -4,12 +4,17 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Tag from './Tag';
 
 // returns three different tags from one tag with different levels
-function levelTag(tag, addTag) {
+function levelTag(tag, addTag, color) {
     const leveledTags = [];
     for (let i = 0; i < 3; i++) {
         const leveledTag = { ...tag, level: i };
         leveledTags.push(
-            <Tag onPress={() => addTag(leveledTag)} key={i} tag={leveledTag} />
+            <Tag
+                onPress={() => addTag(leveledTag)}
+                key={i}
+                tag={leveledTag}
+                color={color}
+            />
         );
     }
     return leveledTags;
@@ -17,11 +22,11 @@ function levelTag(tag, addTag) {
 
 const LevelOptions = props => (
     <View style={styles.overlay}>
-        {levelTag(props.tag, props.addTag)}
+        {levelTag(props.tag, props.addTag, props.color)}
         <TouchableOpacity
             onPress={props.onCancel}
             style={{
-                backgroundColor: props.tag.color,
+                backgroundColor: props.color,
                 padding: 10,
                 borderRadius: 20
             }}>

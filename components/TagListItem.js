@@ -19,8 +19,7 @@ const DateListItem = props => {
     return (
         <TouchableOpacity
             style={[styles.container, styles.grandchild]}
-            onPress={() => props.showDate(props.date)}
-            >
+            onPress={() => props.showDate(props.date)}>
             <Text>{dateStr}</Text>
         </TouchableOpacity>
     );
@@ -44,7 +43,11 @@ class SubTagListItem extends React.Component {
         return (
             <View>
                 <TouchableOpacity
-                    style={[styles.container, styles.child, {backgroundColor: this.props.color}]}
+                    style={[
+                        styles.container,
+                        styles.child,
+                        { backgroundColor: this.props.color }
+                    ]}
                     onPress={() => this.toggleExpansion()}>
                     <View style={styles.side}>
                         <Icon
@@ -65,7 +68,7 @@ class SubTagListItem extends React.Component {
                     </View>
                     <View style={styles.side}>
                         <Text style={styles.white}>
-                            {this.props.count}   {this.props.percentage}%
+                            {this.props.count} {this.props.percentage}%
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -104,7 +107,10 @@ export default class TagListItem extends React.Component {
         return (
             <View>
                 <TouchableOpacity
-                    style={[styles.container, {backgroundColor: this.props.color}]}
+                    style={[
+                        styles.container,
+                        { backgroundColor: this.props.color }
+                    ]}
                     onPress={() => this.toggleExpansion()}>
                     <View style={styles.side}>
                         <Icon
@@ -116,11 +122,13 @@ export default class TagListItem extends React.Component {
                             size={30}
                             color={'white'}
                         />
-                        <Text style={styles.white}>{this.props.name.toUpperCase()}</Text>
+                        <Text style={styles.white}>
+                            {this.props.name.toUpperCase()}
+                        </Text>
                     </View>
                     <View style={styles.side}>
                         <Text style={styles.white}>
-                            {this.props.count}   {this.props.percentage}%
+                            {this.props.count} {this.props.percentage}%
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -151,7 +159,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: 'white',
-        padding: 10,
+        padding: 10
     },
     side: {
         flexDirection: 'row',
@@ -164,9 +172,9 @@ const styles = StyleSheet.create({
     grandchild: {
         marginLeft: 20,
         margin: 2,
-        borderRadius: 10,
+        borderRadius: 10
     },
     white: {
-        color: 'white',
-    },
+        color: 'white'
+    }
 });

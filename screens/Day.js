@@ -11,7 +11,7 @@ import {
     DatePickerAndroid
 } from 'react-native';
 import { Tag, Note, LevelOptions, HeaderIcon } from '../components';
-import { defaultTags } from '../constants';
+import { defaultTags, defaultTagColors } from '../constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import dateString from '../utilities/dateString';
 
@@ -37,8 +37,11 @@ class Day extends React.Component {
 
     // load all the tags and and data of the day from storage
     async load() {
-        const tagsString = await AsyncStorage.getItem('tags');
-        const tags = tagsString ? JSON.parse(tagsString) : defaultTags;
+        const tags =
+            JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
+        const tagColors =
+            JSON.parse(await AsyncStorage.getItem('tagColors')) ||
+            defaultTagColors;
 
         const dataString = await AsyncStorage.getItem(
             dateString(this.state.date, 'key')
@@ -52,8 +55,9 @@ class Day extends React.Component {
 
         this.setState({
             tags: tags.filter(t => !selectedNames.includes(t.name)),
-            selected: selected,
-            note: note,
+            selected,
+            note,
+            tagColors,
             isReady: true
         });
     }
@@ -113,7 +117,7 @@ class Day extends React.Component {
     async setDate() {
         const { action, year, month, day } = await DatePickerAndroid.open({
             date: this.state.date,
-            maxDate: new Date(),
+            maxDate: new Date()
         });
         if (action === DatePickerAndroid.dismissedAction) return;
         this.setState({
@@ -127,12 +131,24 @@ class Day extends React.Component {
         if (!this.state.isReady) return <ActivityIndicator />;
 
         const active = this.state.active;
+        const tagColors = this.state.tagColors;
 
         const tags = this.state.tags.map((tag, i) => (
-            <Tag onPress={() => this.activateTag(tag)} key={tag.name} tag={tag} />
+            <Tag
+                onPress={() => this.activateTag(tag)}
+                key={tag.name}
+                tag={tag}
+                color={tagColors[tag.name]}
+            />
         ));
         let selected = this.state.selected.map((tag, i) => (
-            <Tag selected onPress={() => this.removeTag(i)} key={tag.name} tag={tag} />
+            <Tag
+                selected
+                onPress={() => this.removeTag(i)}
+                key={tag.name}
+                tag={tag}
+                color={tagColors[tag.name]}
+            />
         ));
         if (selected.length === 0) {
             selected = <Text>Select one or more tag</Text>;
@@ -161,6 +177,7 @@ class Day extends React.Component {
                 {active && (
                     <LevelOptions
                         tag={active}
+                        color={tagColors[active.name]}
                         onCancel={() => this.activateTag(null)}
                         addTag={this.addTag.bind(this)}
                     />

@@ -35,7 +35,7 @@ class Note extends React.Component {
                         numberOfLines={10}
                         autoFocus={true}
                         placeholder="Type your note here"
-                        onChangeText={text => this.setState({text})}
+                        onChangeText={text => this.setState({ text })}
                     />
                     <Button title="Save" onPress={() => this.handleSave()} />
                 </View>
@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     note: {
         flex: 1,
         backgroundColor: 'white',
-        padding: 15
+        padding: 15,
+        paddingBottom: 0
     },
     noteText: {
         marginTop: 10
