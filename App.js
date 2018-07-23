@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import Day from './screens/Day';
-import Stat from './screens/Stat'
+import Stat from './screens/Stat';
+import EditTag from './screens/EditTag';
 
 const Days = createDrawerNavigator({
     Day: {
@@ -11,6 +12,9 @@ const Days = createDrawerNavigator({
     Stat: {
         screen: Stat
     },
+    EditTag: {
+        screen: EditTag
+    }
 });
 
 export default Days;
