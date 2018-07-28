@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "16.4.1",
     "react-native": "0.56.0",
+    "react-native-google-signin": "^1.0.0-rc1",
     "react-native-push-notification": "^3.0.2",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.6.2"

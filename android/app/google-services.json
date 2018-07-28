@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1018712001988",
+    "firebase_url": "https://dingulu-sjsakib.firebaseio.com",
+    "project_id": "dingulu-sjsakib",
+    "storage_bucket": "dingulu-sjsakib.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018712001988:android:9dc1b4029bf82950",
+        "android_client_info": {
+          "package_name": "com.dingulu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018712001988-rr9cp0k9vnv1mh1ifjcm6arq8mfgmmdd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dingulu",
+            "certificate_hash": "33984dea6fb5eba48c2c095e78547853d157b88b"
+          }
+        },
+        {
+          "client_id": "1018712001988-ponaq0tn7p6adin494kv8mifajnvt8gm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvXaJeNaI8xt_5Il4dPujBohNRXmeojZA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018712001988-ponaq0tn7p6adin494kv8mifajnvt8gm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

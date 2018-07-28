@@ -1,7 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, AsyncStorage, TouchableOpacity, TimePickerAndroid } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    NativeModules,
+    AsyncStorage,
+    TouchableOpacity,
+    TimePickerAndroid
+} from 'react-native';
 import { HeaderIcon } from '../components';
 import PushNotification from 'react-native-push-notification';
+import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
+
+const { RNGoogleSignin } = NativeModules;
 
 class Settings extends React.Component {
     static navigationOptions = {
@@ -13,7 +24,7 @@ class Settings extends React.Component {
 
         this.state = {
             notificationTime: '--:--'
-        }
+        };
         this.load();
     }
 
@@ -21,7 +32,7 @@ class Settings extends React.Component {
         const { action, hour, minute } = await TimePickerAndroid.open({
             hour: 22,
             minute: 0,
-            is24Hour: false,
+            is24Hour: false
         });
         if (action === TimePickerAndroid.dismissedAction) return;
 
@@ -36,12 +47,12 @@ class Settings extends React.Component {
             message: 'Would you like to log your day?',
             actions: '["Remind Later"]',
             date: time,
-            repeatType: 'day',
+            repeatType: 'day'
         });
 
-        await AsyncStorage.setItem('notificationTime', hour + ':' + minute)
+        await AsyncStorage.setItem('notificationTime', hour + ':' + minute);
 
-        this.setState({notificationTime: this.timeString(hour, minute)});
+        this.setState({ notificationTime: this.timeString(hour, minute) });
     }
 
     timeString(hour, minute) {
@@ -57,9 +68,19 @@ class Settings extends React.Component {
     }
 
     async load() {
-        let notificationTime = (await AsyncStorage.getItem('notificationTime')) || '22:00';
+        let notificationTime =
+            (await AsyncStorage.getItem('notificationTime')) || '22:00';
         let [hour, minute] = notificationTime.split(':').map(Number);
-        this.setState({notificationTime: this.timeString(hour, minute)});
+        this.setState({ notificationTime: this.timeString(hour, minute) });
+    }
+
+    async signIn() {
+        await GoogleSignin.configure({
+            scopes: ['https://www.googleapis.com/auth/drive.readonly']
+        });
+        const user = await GoogleSignin.signIn();
+        console.log(user);
+        console.log(await RNGoogleSignin.getAccessToken(user));
     }
 
     render() {
@@ -72,9 +93,17 @@ class Settings extends React.Component {
                 <View style={styles.timeSetting}>
                     <Text style={styles.biggerText}>Notification time</Text>
                     <TouchableOpacity onPress={() => this.setTime()}>
-                        <Text style={styles.biggerText}>{this.state.notificationTime}</Text>
+                        <Text style={styles.biggerText}>
+                            {this.state.notificationTime}
+                        </Text>
                     </TouchableOpacity>
                 </View>
+                <GoogleSigninButton
+                    style={{ width: 48, height: 48 }}
+                    size={GoogleSigninButton.Size.Icon}
+                    color={GoogleSigninButton.Color.Dark}
+                    onPress={this.signIn}
+                />
             </View>
         );
     }
@@ -100,10 +129,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     biggerText: {
-        fontSize: 18,
+        fontSize: 18
     }
 });
 
