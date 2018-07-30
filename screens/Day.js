@@ -23,7 +23,11 @@ class Day extends React.Component {
     constructor(props) {
         super(props);
 
-        const date = this.props.navigation.getParam('date', new Date());
+        let date = this.props.navigation.getParam('date');
+        if (!date) {
+            date = new Date();
+            if (date.getHours() < 6) date.setDate(date.getDate() - 1);
+        }
         this.state = {
             date,
             isReady: false,

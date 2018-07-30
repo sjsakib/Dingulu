@@ -14,13 +14,13 @@ function dateString(d, size) {
         'December'
     ];
     const days = [
+        'Sunday',
         'Monday',
         'Tuesday',
         'Wednesday',
         'Thursday',
         'Friday',
         'Saturday',
-        'Sunday'
     ];
 
     if ( size === 'short' ) {
@@ -31,7 +31,7 @@ function dateString(d, size) {
         return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
     }
     
-    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}, ${days[d.getDay() - 1]}`;
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}, ${days[d.getDay()]}`;
 
 }
 

@@ -2,7 +2,8 @@ import PushNotification from 'react-native-push-notification';
 
 export default function scheduleNotification(hour, minute) {
     const time = new Date();
-    if (time.getHours() > hour) time.setDate(time.getDate() + 1);
+    const cHour = time.getHours();
+    if (cHour > hour || (cHour === hour && minute < time.getMinutes())) time.setDate(time.getDate() + 1);
     time.setHours(hour);
     time.setMinutes(minute);
 
