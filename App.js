@@ -1,30 +1,23 @@
 import React from 'react';
-import { DeviceEventEmitter, AsyncStorage } from 'react-native';
+import { DeviceEventEmitter, AsyncStorage, NativeModules } from 'react-native';
 import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import Day from './screens/Day';
 import Stat from './screens/Stat';
 import EditTag from './screens/EditTag';
 import Settings from './screens/Settings';
+import backup from './utilities/backup';
+import scheduleNotification from './utilities/scheduleNotification';
 import PushNotification from 'react-native-push-notification';
+import { GoogleSignin } from 'react-native-google-signin';
+
+const { RNGoogleSignin } = NativeModules;
 
 class Dingulu extends React.Component {
     async scheduleNotification() {
         const notificationTime = await AsyncStorage.getItem('notificationTime');
         if (notificationTime) return;
 
-        const time = new Date();
-        if (time.getHours() > 22) time.setDate(time.getDate() + 1)
-        time.setHours(22);
-        time.setMinutes(0);
-
-        PushNotification.localNotificationSchedule({
-            id: '0',
-            title: 'How was the day?',
-            message: 'Would you like to log your day?',
-            actions: '["Remind Later"]',
-            date: time,
-            repeatType: 'day',
-        });
+        scheduleNotification(22, 0);
 
         PushNotification.registerNotificationActions(['Remind Later']);
         DeviceEventEmitter.addListener('notificationActionReceived', action => {
@@ -42,8 +35,19 @@ class Dingulu extends React.Component {
     }
     componentWillMount() {
         this.scheduleNotification();
+        this.backup();
     }
-    
+
+    async backup() {
+        await GoogleSignin.configure({
+            scopes: ['https://www.googleapis.com/auth/drive.appdata']
+        });
+        const user = await GoogleSignin.currentUserAsync();
+        if (!user) return;
+        const accessToken = await RNGoogleSignin.getAccessToken(user);
+        backup(accessToken);
+    }
+
     render() {
         return <DinguluNavigator />;
     }

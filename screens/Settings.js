@@ -6,11 +6,15 @@ import {
     NativeModules,
     AsyncStorage,
     TouchableOpacity,
-    TimePickerAndroid
+    TimePickerAndroid,
+    ToastAndroid
 } from 'react-native';
 import { HeaderIcon } from '../components';
-import PushNotification from 'react-native-push-notification';
-import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
+import backup from '../utilities/backup';
+import restore from '../utilities/restore';
+import timeString from '../utilities/timeString';
+import scheduleNotification from '../utilities/scheduleNotification';
+import { GoogleSignin } from 'react-native-google-signin';
 
 const { RNGoogleSignin } = NativeModules;
 
@@ -23,9 +27,24 @@ class Settings extends React.Component {
         super(props);
 
         this.state = {
-            notificationTime: '--:--'
+            notificationTime: '--:--',
+            lastBackup: 'loading...',
+            googleAccount: null
         };
         this.load();
+    }
+
+    async load() {
+        let notificationTime = (await AsyncStorage.getItem('notificationTime')) || '22:00';
+        let [hour, minute] = notificationTime.split(':').map(Number);
+
+        const googleAccount = await AsyncStorage.getItem('googleAccount');
+        const lastBackup = await AsyncStorage.getItem('lastBackup');
+        this.setState({
+            notificationTime: timeString(hour, minute),
+            googleAccount,
+            lastBackup
+        });
     }
 
     async setTime() {
@@ -36,54 +55,38 @@ class Settings extends React.Component {
         });
         if (action === TimePickerAndroid.dismissedAction) return;
 
-        const time = new Date();
-        if (time.getHours() > hour) time.setDate(time.getDate() + 1);
-        time.setHours(hour);
-        time.setMinutes(minute);
-
-        PushNotification.localNotificationSchedule({
-            id: '0',
-            title: 'How was the day?',
-            message: 'Would you like to log your day?',
-            actions: '["Remind Later"]',
-            date: time,
-            repeatType: 'day'
-        });
+        scheduleNotification(hour, minute);
 
         await AsyncStorage.setItem('notificationTime', hour + ':' + minute);
 
-        this.setState({ notificationTime: this.timeString(hour, minute) });
-    }
-
-    timeString(hour, minute) {
-        let isAm = true;
-        if (hour > 12) {
-            hour -= 12;
-            isAm = false;
-        }
-        minute = '' + minute;
-        if (minute.length === 1) minute = '0' + minute;
-
-        return hour + ':' + minute + ` ${isAm ? 'am' : 'pm'}`;
-    }
-
-    async load() {
-        let notificationTime =
-            (await AsyncStorage.getItem('notificationTime')) || '22:00';
-        let [hour, minute] = notificationTime.split(':').map(Number);
-        this.setState({ notificationTime: this.timeString(hour, minute) });
+        this.setState({ notificationTime: timeString(hour, minute) });
     }
 
     async signIn() {
         await GoogleSignin.configure({
-            scopes: ['https://www.googleapis.com/auth/drive.readonly']
+            scopes: ['https://www.googleapis.com/auth/drive.appdata']
         });
+        if (this.state.googleAccount) {
+            await GoogleSignin.signOut();
+            this.setState({ googleAccount: null });
+            await AsyncStorage.removeItem('googleAccount');
+            return;
+        }
         const user = await GoogleSignin.signIn();
-        console.log(user);
-        console.log(await RNGoogleSignin.getAccessToken(user));
+
+        this.setState({ googleAccount: user.email });
+        await AsyncStorage.setItem('googleAccount', user.email);
+
+        const accessToken = await RNGoogleSignin.getAccessToken(user);
+
+        if (!(await restore(accessToken))) {
+            await backup(accessToken);
+        }
     }
 
     render() {
+        const googleAccount = this.state.googleAccount;
+
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -93,17 +96,16 @@ class Settings extends React.Component {
                 <View style={styles.timeSetting}>
                     <Text style={styles.biggerText}>Notification time</Text>
                     <TouchableOpacity onPress={() => this.setTime()}>
-                        <Text style={styles.biggerText}>
-                            {this.state.notificationTime}
-                        </Text>
+                        <Text style={styles.biggerText}>{this.state.notificationTime}</Text>
                     </TouchableOpacity>
                 </View>
-                <GoogleSigninButton
-                    style={{ width: 48, height: 48 }}
-                    size={GoogleSigninButton.Size.Icon}
-                    color={GoogleSigninButton.Color.Dark}
-                    onPress={this.signIn}
-                />
+                <View style={styles.linkGoogle}>
+                    {googleAccount && <Text>{googleAccount} connected</Text>}
+                    <TouchableOpacity onPress={() => this.signIn()}>
+                        <Text>{googleAccount ? 'Signout' : 'Connect a Google account'}</Text>
+                    </TouchableOpacity>
+                    <Text>Last backup: {this.state.lastBackup}</Text>
+                </View>
             </View>
         );
     }

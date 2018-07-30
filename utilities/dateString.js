@@ -1,4 +1,4 @@
-function dateString(d, size, lang) {
+function dateString(d, size) {
     const months = [
         'January',
         'February',
