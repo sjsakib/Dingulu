@@ -52,7 +52,7 @@ class Note extends React.Component {
                     <TouchableOpacity
                         style={styles.editIcon}
                         onPress={() => this.setState({ editing: true })}>
-                        <Icon name={iconName} size={30} />
+                        <Icon color="black" name={iconName} size={30} />
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.noteText}>
@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
         padding: 15
     },
     title: {
-        fontSize: 24
+        fontSize: 24,
+        color: 'black',
     },
     note: {
         flex: 1,
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
         paddingBottom: 0
     },
     noteText: {
-        marginTop: 10
+        marginTop: 10,
     },
     header: {
         flexDirection: 'row',

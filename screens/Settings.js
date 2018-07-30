@@ -2,6 +2,7 @@ import React from 'react';
 import {
     View,
     Text,
+    Button,
     StyleSheet,
     NativeModules,
     AsyncStorage,
@@ -9,11 +10,8 @@ import {
     TimePickerAndroid,
     ToastAndroid
 } from 'react-native';
-import { HeaderIcon } from '../components';
-import backup from '../utilities/backup';
-import restore from '../utilities/restore';
-import timeString from '../utilities/timeString';
-import scheduleNotification from '../utilities/scheduleNotification';
+import { HeaderIcon, Seperator } from '../components';
+import { backup, restore, timeString, scheduleNotification, headerStyle } from '../utilities';
 import { GoogleSignin } from 'react-native-google-signin';
 
 const { RNGoogleSignin } = NativeModules;
@@ -39,7 +37,8 @@ class Settings extends React.Component {
         let [hour, minute] = notificationTime.split(':').map(Number);
 
         const googleAccount = await AsyncStorage.getItem('googleAccount');
-        const lastBackup = await AsyncStorage.getItem('lastBackup');
+        let lastBackup = await AsyncStorage.getItem('lastBackup');
+        if (!lastBackup) lastBackup = 'Never backed up';
         this.setState({
             notificationTime: timeString(hour, minute),
             googleAccount,
@@ -89,22 +88,29 @@ class Settings extends React.Component {
 
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <HeaderIcon navigation={this.props.navigation} />
-                    <Text style={styles.headerText}>Settings</Text>
+                <View style={headerStyle.header}>
+                    <View style={headerStyle.headerLeft}>
+                        <HeaderIcon navigation={this.props.navigation} />
+                    </View>
+                    <View style={headerStyle.headerRight}>
+                        <Text style={headerStyle.headerText}>Settings</Text>
+                    </View>
                 </View>
+                <Seperator />
                 <View style={styles.timeSetting}>
-                    <Text style={styles.biggerText}>Notification time</Text>
+                    <Text style={styles.settingsText}>Notification time</Text>
                     <TouchableOpacity onPress={() => this.setTime()}>
-                        <Text style={styles.biggerText}>{this.state.notificationTime}</Text>
+                        <Text style={styles.settingsText}>{this.state.notificationTime}</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.linkGoogle}>
-                    {googleAccount && <Text>{googleAccount} connected</Text>}
-                    <TouchableOpacity onPress={() => this.signIn()}>
-                        <Text>{googleAccount ? 'Signout' : 'Connect a Google account'}</Text>
-                    </TouchableOpacity>
-                    <Text>Last backup: {this.state.lastBackup}</Text>
+                <Seperator />
+                <View style={styles.backup}>
+                    <Button
+                        title={googleAccount ? 'Disconnect ' : 'Connect a Google account'}
+                        onPress={() => this.signIn()}
+                    />
+                    {googleAccount && <Text style={styles.info}>{googleAccount} connected</Text>}
+                    <Text style={styles.info}>Last backup: {this.state.lastBackup}</Text>
                 </View>
             </View>
         );
@@ -115,26 +121,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    header: {
-        fontSize: 30,
-        height: 60,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 30
-    },
-    headerText: {
-        fontSize: 20,
-        marginLeft: 40,
-        fontWeight: '400'
-    },
     timeSetting: {
         backgroundColor: 'white',
         padding: 10,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    biggerText: {
-        fontSize: 18
+    settingsText: {
+        color: 'black',
+        fontWeight: '500'
+    },
+    backup: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white'
+    },
+    info: {
+        color: 'black',
+        fontWeight: '500',
+        marginTop: 20
     }
 });
 

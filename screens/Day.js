@@ -10,10 +10,10 @@ import {
     ScrollView,
     DatePickerAndroid
 } from 'react-native';
-import { Tag, Note, LevelOptions, HeaderIcon } from '../components';
+import { Tag, Note, LevelOptions, HeaderIcon, Seperator } from '../components';
 import { defaultTags, defaultTagColors } from '../constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import dateString from '../utilities/dateString';
+import { dateString, headerStyle } from '../utilities';
 
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -151,25 +151,28 @@ class Day extends React.Component {
             />
         ));
         if (selected.length === 0) {
-            selected = <Text>Select one or more tag</Text>;
+            selected = <Text>Select one or more tags</Text>;
         }
 
         const dateStr = dateString(this.state.date, 'long');
 
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
+                <View style={headerStyle.header}>
                     <HeaderIcon navigation={this.props.navigation} />
-                    <Text style={styles.headerText}>{dateStr}</Text>
+                    <Text style={headerStyle.headerText}>{dateStr}</Text>
                     <TouchableOpacity onPress={() => this.setDate()}>
-                        <Icon name="event" size={26} />
+                        <Icon color="black" name="event" size={26} />
                     </TouchableOpacity>
                 </View>
+                <Seperator />
                 <View style={styles.segment}>
                     <Text style={styles.question}>How was the day?</Text>
                     <View style={styles.tags}>{selected}</View>
                 </View>
+                <Seperator />
                 <View style={[styles.tags, styles.segment]}>{tags}</View>
+                <Seperator />
                 <Note
                     updateNote={this.updateNote.bind(this)}
                     text={this.state.note}
@@ -194,27 +197,16 @@ const styles = StyleSheet.create({
     segment: {
         backgroundColor: 'white',
         padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: 'gray',
         display: 'flex'
     },
     tags: {
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        paddingTop: 5
     },
     question: {
-        fontSize: 24
-    },
-    header: {
-        fontSize: 30,
-        height: 60,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center'
-    },
-    headerText: {
-        fontSize: 20,
-        fontWeight: '400'
+        fontSize: 24,
+        color: 'black',
     }
 });
 

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    Text,
-    View,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity
-} from 'react-native';
+import { Text, View, StyleSheet, FlatList, TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import dateString from '../utilities/dateString';
 
@@ -17,11 +11,11 @@ function leveledTag(name, level) {
 const DateListItem = props => {
     const dateStr = dateString(new Date(props.date), 'long');
     return (
-        <TouchableOpacity
-            style={[styles.container, styles.grandchild]}
-            onPress={() => props.showDate(props.date)}>
-            <Text>{dateStr}</Text>
-        </TouchableOpacity>
+        <TouchableNativeFeedback onPress={() => props.showDate(props.date)}>
+            <View style={[styles.container, styles.grandchild]}>
+                <Text>{dateStr}</Text>
+            </View>
+        </TouchableNativeFeedback>
     );
 };
 
@@ -42,45 +36,29 @@ class SubTagListItem extends React.Component {
     render() {
         return (
             <View>
-                <TouchableOpacity
-                    style={[
-                        styles.container,
-                        styles.child,
-                        { backgroundColor: this.props.color }
-                    ]}
-                    onPress={() => this.toggleExpansion()}>
-                    <View style={styles.side}>
-                        <Icon
-                            name={
-                                this.state.expanded
-                                    ? 'expand-more'
-                                    : 'chevron-right'
-                            }
-                            size={30}
-                            color="white"
-                        />
-                        <Text style={styles.white}>
-                            {leveledTag(
-                                this.props.name,
-                                this.props.level
-                            ).toUpperCase()}
-                        </Text>
+                <TouchableNativeFeedback onPress={() => this.toggleExpansion()}>
+                    <View style={[styles.container, styles.child, { backgroundColor: this.props.color }]}>
+                        <View style={styles.side}>
+                            <Icon
+                                name={this.state.expanded ? 'expand-more' : 'chevron-right'}
+                                size={30}
+                                color="white"
+                            />
+                            <Text style={styles.white}>
+                                {leveledTag(this.props.name, this.props.level).toUpperCase()}
+                            </Text>
+                        </View>
+                        <View style={styles.side}>
+                            <Text style={styles.white}>
+                                {this.props.count} {this.props.percentage}%
+                            </Text>
+                        </View>
                     </View>
-                    <View style={styles.side}>
-                        <Text style={styles.white}>
-                            {this.props.count} {this.props.percentage}%
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+                </TouchableNativeFeedback>
                 {this.state.expanded && (
                     <FlatList
                         data={this.props.dates}
-                        renderItem={({ item }) => (
-                            <DateListItem
-                                showDate={this.props.showDate}
-                                date={item}
-                            />
-                        )}
+                        renderItem={({ item }) => <DateListItem showDate={this.props.showDate} date={item} />}
                         keyExtractor={(item, index) => item}
                     />
                 )}
@@ -106,32 +84,23 @@ export default class TagListItem extends React.Component {
     render() {
         return (
             <View>
-                <TouchableOpacity
-                    style={[
-                        styles.container,
-                        { backgroundColor: this.props.color }
-                    ]}
-                    onPress={() => this.toggleExpansion()}>
-                    <View style={styles.side}>
-                        <Icon
-                            name={
-                                this.state.expanded
-                                    ? 'expand-more'
-                                    : 'chevron-right'
-                            }
-                            size={30}
-                            color={'white'}
-                        />
-                        <Text style={styles.white}>
-                            {this.props.name.toUpperCase()}
-                        </Text>
+                <TouchableNativeFeedback onPress={() => this.toggleExpansion()}>
+                    <View style={[styles.container, { backgroundColor: this.props.color }]}>
+                        <View style={styles.side}>
+                            <Icon
+                                name={this.state.expanded ? 'expand-more' : 'chevron-right'}
+                                size={30}
+                                color={'white'}
+                            />
+                            <Text style={styles.white}>{this.props.name.toUpperCase()}</Text>
+                        </View>
+                        <View style={styles.side}>
+                            <Text style={styles.white}>
+                                {this.props.count} {this.props.percentage}%
+                            </Text>
+                        </View>
                     </View>
-                    <View style={styles.side}>
-                        <Text style={styles.white}>
-                            {this.props.count} {this.props.percentage}%
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+                </TouchableNativeFeedback>
                 {this.state.expanded && (
                     <FlatList
                         data={this.props.levels}
@@ -159,7 +128,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: 'white',
-        padding: 10
+        padding: 2,
+        paddingRight: 12,
+        borderRadius: 8,
+        margin: 2,
+
     },
     side: {
         flexDirection: 'row',
@@ -167,12 +140,14 @@ const styles = StyleSheet.create({
     },
     child: {
         margin: 2,
-        borderRadius: 20
+        marginLeft: 30,
+        borderRadius: 10,
     },
     grandchild: {
-        marginLeft: 20,
+        marginLeft: 50,
         margin: 2,
-        borderRadius: 10
+        borderRadius: 8,
+        padding: 8,
     },
     white: {
         color: 'white'

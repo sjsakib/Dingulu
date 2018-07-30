@@ -6,14 +6,15 @@ import {
     StyleSheet,
     AsyncStorage,
     ActivityIndicator,
-    TouchableOpacity,
+    TouchableNativeFeedback,
     FlatList,
     TextInput,
     Picker,
     Alert
 } from 'react-native';
-import { HeaderIcon } from '../components';
+import { HeaderIcon, Seperator } from '../components';
 import { defaultTags, defaultTagColors } from '../constants';
+import { headerStyle } from '../utilities';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class TagInfo extends React.Component {
@@ -30,11 +31,7 @@ class TagInfo extends React.Component {
         this.setState({
             editing: false
         });
-        this.props.updateName(
-            this.state.name,
-            this.props.index,
-            this.props.name
-        );
+        this.props.updateName(this.state.name, this.props.index, this.props.name);
     }
 
     updateColor(color) {
@@ -47,19 +44,12 @@ class TagInfo extends React.Component {
     }
 
     removeAlert() {
-        Alert.alert('Delete this tag?', '', [
-            { text: 'OK', onPress: () => this.remove() },
-            { text: 'Cancel' }
-        ]);
+        Alert.alert('Delete this tag?', '', [{ text: 'OK', onPress: () => this.remove() }, { text: 'Cancel' }]);
     }
 
     render() {
         return (
-            <View
-                style={[
-                    styles.tagContainer,
-                    { backgroundColor: this.state.color }
-                ]}>
+            <View style={[styles.tagContainer, { backgroundColor: this.state.color }]}>
                 {this.state.editing ? (
                     <TextInput
                         autoFocus
@@ -68,11 +58,12 @@ class TagInfo extends React.Component {
                         onEndEditing={() => this.updateName()}
                     />
                 ) : (
-                    <Text
-                        style={styles.tagName}
-                        onPress={() => this.setState({ editing: true })}>
-                        {this.props.name.toUpperCase()}
-                    </Text>
+                    <TouchableNativeFeedback onPress={() => this.setState({ editing: true })}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.tagName}>{this.props.name.toUpperCase()}</Text>
+                            <Icon size={16} color="white" name="edit" />
+                        </View>
+                    </TouchableNativeFeedback>
                 )}
                 <View style={styles.right}>
                     <Picker
@@ -100,12 +91,7 @@ class TagInfo extends React.Component {
                         <Picker.Item label="Blue Grey" value="#607D8B" />
                         <Picker.Item label="Black" value="#212121" />
                     </Picker>
-                    <Icon
-                        onPress={() => this.removeAlert()}
-                        name="delete"
-                        color="white"
-                        size={26}
-                    />
+                    <Icon onPress={() => this.removeAlert()} name="delete" color="white" size={26} />
                 </View>
             </View>
         );
@@ -122,17 +108,14 @@ class EditTag extends React.Component {
         this.state = {
             isReady: false,
             editingNew: false,
-            newName: '',
+            newName: ''
         };
         this.load();
     }
 
     async load() {
-        const tags =
-            JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
-        const tagColors =
-            JSON.parse(await AsyncStorage.getItem('tagColors')) ||
-            defaultTagColors;
+        const tags = JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
+        const tagColors = JSON.parse(await AsyncStorage.getItem('tagColors')) || defaultTagColors;
         this.setState({
             tags,
             tagColors,
@@ -181,7 +164,7 @@ class EditTag extends React.Component {
         const newName = this.state.newName.toLowerCase();
 
         if (!newName) {
-            this.setState({editingNew: false})
+            this.setState({ editingNew: false });
             return;
         }
 
@@ -193,7 +176,7 @@ class EditTag extends React.Component {
         }
 
         const tagColors = { ...this.state.tagColors };
-        tags.push({name: newName, level: 1});
+        tags.push({ name: newName, level: 1 });
         tagColors[newName] = '#212121';
 
         await AsyncStorage.setItem('tags', JSON.stringify(tags));
@@ -202,7 +185,7 @@ class EditTag extends React.Component {
         this.setState({
             tags,
             tagColors,
-            editingNew: false,
+            editingNew: false
         });
     }
 
@@ -215,29 +198,32 @@ class EditTag extends React.Component {
                 {this.state.editingNew ? (
                     <TextInput
                         style={{ flex: 1 }}
-                        onChangeText={text => this.setState({newName: text})}
+                        onChangeText={text => this.setState({ newName: text })}
                         onEndEditing={() => this.addNewTag()}
                         placeholder="new tag"
                         autoFocus
                     />
                 ) : (
-                    <TouchableOpacity
-                        style={styles.addNew}
-                        onPress={() => this.setState({ editingNew: true })}>
+                    <TouchableNativeFeedback style={styles.addNew} onPress={() => this.setState({ editingNew: true })}>
                         <View style={styles.addNew}>
                             <Icon name="add" size={26} />
                             <Text> ADD NEW</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableNativeFeedback>
                 )}
             </View>
         );
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <HeaderIcon navigation={this.props.navigation} />
-                    <Text style={styles.headerText}>Edit Tags</Text>
+                <View style={headerStyle.header}>
+                    <View style={headerStyle.headerLeft}>
+                        <HeaderIcon navigation={this.props.navigation} />
+                    </View>
+                    <View style={headerStyle.headerRight}>
+                        <Text style={headerStyle.headerText}>Edit Tags</Text>
+                    </View>
                 </View>
+                <Seperator />
                 <FlatList
                     data={this.state.tags}
                     renderItem={({ item, index }) => (
@@ -262,28 +248,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    header: {
-        fontSize: 30,
-        height: 60,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 30
-    },
-    headerText: {
-        fontSize: 20,
-        marginLeft: 40,
-        fontWeight: '400'
-    },
     tagContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         margin: 3
     },
     tagName: {
-        color: 'white'
+        color: 'white',
+        marginRight: 5
     },
     right: {
         flexDirection: 'row',
@@ -300,7 +275,8 @@ const styles = StyleSheet.create({
     },
     addNew: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 10
     }
 });
 

@@ -15,7 +15,7 @@ export default class Tag extends React.Component {
                 backgroundColor: props.color,
                 padding: 10,
                 margin: 5,
-                borderRadius: 20
+                borderRadius: 15
             },
             text: {
                 color: 'white'

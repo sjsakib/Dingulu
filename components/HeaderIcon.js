@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const HeaderIcon = ({ navigation }) => (
     <TouchableOpacity onPress={() => navigation.openDrawer()}>
-        <Icon name="menu" size={26}/>
+        <Icon color="black" name="menu" size={24}/>
     </TouchableOpacity>
 )
 

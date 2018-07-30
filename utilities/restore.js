@@ -23,6 +23,7 @@ async function restore(accessToken) {
     await AsyncStorage.multiSet(data);
 
     const notificationTime = await AsyncStorage.getItem('notificationTime');
+    if (!notificationTime) return true;
     scheduleNotification(...notificationTime.split(':').map(Number))
 
     return true;

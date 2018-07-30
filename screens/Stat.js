@@ -10,10 +10,10 @@ import {
     TouchableOpacity,
     DatePickerAndroid
 } from 'react-native';
-import { HeaderIcon, TagListItem, DateInfo } from '../components';
+import { HeaderIcon, TagListItem, DateInfo, Seperator } from '../components';
 import { defaultTagColors } from '../constants';
 import populate from '../populate';
-import dateString from '../utilities/dateString';
+import { dateString, headerStyle } from '../utilities';
 
 class Stat extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -137,16 +137,17 @@ class Stat extends React.Component {
 
         return (
             <View>
-                <View style={styles.header}>
+                <View style={headerStyle.header}>
                     <HeaderIcon navigation={this.props.navigation} />
                     <TouchableOpacity onPress={() => this.setRange('start')}>
-                        <Text style={styles.link}>{startString}</Text>
+                        <Text style={[headerStyle.headerText, styles.link]}>{startString}</Text>
                     </TouchableOpacity>
-                    <Text>to</Text>
+                    <Text style={headerStyle.headerText}>to</Text>
                     <TouchableOpacity onPress={() => this.setRange('end')}>
-                        <Text style={styles.link}>{endString}</Text>
+                        <Text style={[headerStyle.headerText, styles.link]}>{endString}</Text>
                     </TouchableOpacity>
                 </View>
+                <Seperator />
                 <FlatList
                     data={this.state.data}
                     renderItem={({ item }) => (
@@ -180,17 +181,6 @@ class Stat extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        fontSize: 30,
-        height: 60,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center'
-    },
-    headerText: {
-        fontSize: 20,
-        fontWeight: '400'
-    },
     listHeader: {
         height: 50,
         alignItems: 'center',
