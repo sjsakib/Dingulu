@@ -31,7 +31,7 @@ function dateString(d, size) {
         return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
     }
     
-    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}, ${days[d.getDay()]}`;
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}, ${days[d.getDay() - 1]}`;
 
 }
 
