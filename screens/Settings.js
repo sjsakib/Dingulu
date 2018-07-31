@@ -71,15 +71,19 @@ class Settings extends React.Component {
             await AsyncStorage.removeItem('googleAccount');
             return;
         }
-        const user = await GoogleSignin.signIn();
 
-        this.setState({ googleAccount: user.email });
-        await AsyncStorage.setItem('googleAccount', user.email);
+        try {
+            const user = await GoogleSignin.signIn();
+            this.setState({ googleAccount: user.email });
+            await AsyncStorage.setItem('googleAccount', user.email);
 
-        const accessToken = await RNGoogleSignin.getAccessToken(user);
+            const accessToken = await RNGoogleSignin.getAccessToken(user);
 
-        if (!(await restore(accessToken))) {
-            await backup(accessToken);
+            if (!(await restore(accessToken))) {
+                await backup(accessToken);
+            }
+        } catch (e) {
+            ToastAndroid.show('Failed. Make sure your internet connection is working', ToastAndroid.LONG);
         }
     }
 
