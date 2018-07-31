@@ -6,19 +6,21 @@ import {
     StyleSheet,
     NativeModules,
     AsyncStorage,
-    TouchableOpacity,
+    TouchableNativeFeedback,
     TimePickerAndroid,
     ToastAndroid
 } from 'react-native';
 import { HeaderIcon, Seperator } from '../components';
 import { backup, restore, timeString, scheduleNotification, headerStyle } from '../utilities';
 import { GoogleSignin } from 'react-native-google-signin';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { RNGoogleSignin } = NativeModules;
 
 class Settings extends React.Component {
     static navigationOptions = {
-        drawerLabel: 'Settings'
+        drawerLabel: 'Settings',
+        drawerIcon: ({ tintColor }) => <Icon color={tintColor} size={24} name="settings" />
     };
 
     constructor(props) {
@@ -101,21 +103,30 @@ class Settings extends React.Component {
                     </View>
                 </View>
                 <Seperator />
-                <View style={styles.timeSetting}>
-                    <Text style={styles.settingsText}>Notification time</Text>
-                    <TouchableOpacity onPress={() => this.setTime()}>
+                <TouchableNativeFeedback onPress={() => this.setTime()}>
+                    <View style={styles.timeSetting}>
+                        <Text style={styles.settingsText}>Notification time</Text>
                         <Text style={styles.settingsText}>{this.state.notificationTime}</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.note}>New day will be considered after 6 am, not 12</Text>
-                </View>
+                        <Text style={styles.note}>New day will be considered after 6 am, not 12</Text>
+                    </View>
+                </TouchableNativeFeedback>
                 <Seperator />
-                <View style={styles.backup}>
-                    <Button
-                        title={googleAccount ? 'Disconnect ' : 'Connect a Google account'}
-                        onPress={() => this.signIn()}
-                    />
-                    {googleAccount && <Text style={styles.info}>{googleAccount} connected</Text>}
-                    <Text style={styles.info}>Last backup: {this.state.lastBackup}</Text>
+                <View style={styles.bottom}>
+                    <View style={styles.backup}>
+                        <Button
+                            title={googleAccount ? 'Disconnect ' : 'Connect a Google account'}
+                            onPress={() => this.signIn()}
+                        />
+                        {googleAccount && <Text style={styles.info}>{googleAccount} connected</Text>}
+                        <Text style={styles.info}>Last backup: {this.state.lastBackup}</Text>
+                    </View>
+                    <Seperator />
+                    <TouchableNativeFeedback>
+                        <View style={styles.credit}>
+                            <Text>Developed by - S.j. Sakib</Text>
+                            <Text>sjsakib.bd@gmail.com</Text>
+                        </View>
+                    </TouchableNativeFeedback>
                 </View>
             </View>
         );
@@ -131,16 +142,25 @@ const styles = StyleSheet.create({
         padding: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        flexWrap: 'wrap',
+        flexWrap: 'wrap'
     },
     settingsText: {
         color: 'black',
         fontWeight: '500'
     },
+    bottom: {
+        flex: 1
+    },
     backup: {
-        flex: 1,
+        flex: 5,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'white'
+    },
+    credit: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'white'
     },
     info: {
@@ -149,7 +169,7 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     note: {
-        marginTop: 10,
+        marginTop: 10
     }
 });
 

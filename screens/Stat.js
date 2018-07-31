@@ -14,10 +14,12 @@ import { HeaderIcon, TagListItem, DateInfo, Seperator } from '../components';
 import { defaultTagColors } from '../constants';
 import populate from '../populate';
 import { dateString, headerStyle } from '../utilities';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Stat extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Stat'
+        drawerLabel: 'Stat',
+        drawerIcon: ({tintColor}) => <Icon color={tintColor} size={24} name="bubble-chart" />
     });
 
     constructor(props) {

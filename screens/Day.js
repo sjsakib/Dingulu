@@ -17,7 +17,8 @@ import { dateString, headerStyle } from '../utilities';
 
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Day'
+        drawerLabel: 'Day',
+        drawerIcon: ({tintColor}) => <Icon color={tintColor} size={24} name="today" />
     });
 
     constructor(props) {

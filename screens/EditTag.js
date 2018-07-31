@@ -100,7 +100,8 @@ class TagInfo extends React.Component {
 
 class EditTag extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Edit Tags'
+        drawerLabel: 'Edit',
+        drawerIcon: ({tintColor}) => <Icon color={tintColor} size={24} name="edit" />
     });
 
     constructor(props) {
@@ -252,8 +253,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 10,
-        borderRadius: 10,
+        padding: 8,
+        borderRadius: 8,
         margin: 3
     },
     tagName: {
