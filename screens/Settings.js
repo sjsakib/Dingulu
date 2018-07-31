@@ -106,6 +106,7 @@ class Settings extends React.Component {
                     <TouchableOpacity onPress={() => this.setTime()}>
                         <Text style={styles.settingsText}>{this.state.notificationTime}</Text>
                     </TouchableOpacity>
+                    <Text style={styles.note}>New day will be considered after 6 am, not 12</Text>
                 </View>
                 <Seperator />
                 <View style={styles.backup}>
@@ -129,7 +130,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
     },
     settingsText: {
         color: 'black',
@@ -145,6 +147,9 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: '500',
         marginTop: 20
+    },
+    note: {
+        marginTop: 10,
     }
 });
 
