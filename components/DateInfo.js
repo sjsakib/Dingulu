@@ -53,7 +53,9 @@ const styles = StyleSheet.create({
         paddingRight: 20
     },
     date: {
-        fontSize: 24
+        fontSize: 24,
+        fontFamily: 'sans-serif-light',
+        color: 'black',
     },
     tags: {
         margin: 20,
@@ -62,7 +64,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     note: {
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'sans-serif-light',
     },
     bottom: {
         flex: 1,

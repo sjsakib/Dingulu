@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
     question: {
         fontSize: 24,
         color: 'black',
+        fontFamily: 'sans-serif-light'
     }
 });
 

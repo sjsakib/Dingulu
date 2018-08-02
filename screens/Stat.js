@@ -163,7 +163,7 @@ class Stat extends React.Component {
                     keyExtractor={item => item.name}
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
-                            <Text>
+                            <Text style={{fontFamily: 'sans-serif-light'}}>
                                 Total {this.state.totalDays} days recorded
                             </Text>
                         </View>

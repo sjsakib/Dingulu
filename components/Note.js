@@ -56,7 +56,7 @@ class Note extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.noteText}>
-                    <Text>{text}</Text>
+                    <Text style={styles.noteTextStyle}>{text}</Text>
                 </ScrollView>
             </View>
         );
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         color: 'black',
+        fontFamily: 'sans-serif-light'
     },
     note: {
         flex: 1,
@@ -91,6 +92,9 @@ const styles = StyleSheet.create({
     },
     noteText: {
         marginTop: 10,
+    },
+    noteTextStyle: {
+        fontFamily: 'sans-serif-light',
     },
     header: {
         flexDirection: 'row',

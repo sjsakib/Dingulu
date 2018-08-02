@@ -107,7 +107,7 @@ class Settings extends React.Component {
                     <View style={styles.timeSetting}>
                         <Text style={styles.settingsText}>Notification time</Text>
                         <Text style={styles.settingsText}>{this.state.notificationTime}</Text>
-                        <Text style={styles.note}>New day will be considered after 6 am, not 12</Text>
+                        <Text style={styles.note}>New day will be considered after 6am, not 12</Text>
                     </View>
                 </TouchableNativeFeedback>
                 <Seperator />
@@ -117,14 +117,16 @@ class Settings extends React.Component {
                             title={googleAccount ? 'Disconnect ' : 'Connect a Google account'}
                             onPress={() => this.signIn()}
                         />
-                        {googleAccount && <Text style={styles.info}>{googleAccount} connected</Text>}
-                        <Text style={styles.info}>Last backup: {this.state.lastBackup}</Text>
+                        <Text style={styles.info}>
+                            {googleAccount && `${googleAccount} connected\n`}
+                            Last backup: {this.state.lastBackup}
+                        </Text>
                     </View>
                     <Seperator />
                     <TouchableNativeFeedback>
                         <View style={styles.credit}>
-                            <Text>Developed by - S.j. Sakib</Text>
-                            <Text>sjsakib.bd@gmail.com</Text>
+                            <Text style={styles.creditText}>Developed by - S.j. Sakib</Text>
+                            <Text style={styles.creditText}>sjsakib.bd@gmail.com</Text>
                         </View>
                     </TouchableNativeFeedback>
                 </View>
@@ -146,7 +148,8 @@ const styles = StyleSheet.create({
     },
     settingsText: {
         color: 'black',
-        fontWeight: '500'
+        fontWeight: '500',
+        fontFamily: 'sans-serif-light'
     },
     bottom: {
         flex: 1
@@ -163,13 +166,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white'
     },
+    creditText: {
+        color: 'black',
+        fontWeight: '200',
+        fontFamily: 'sans-serif-condensed'
+    },
     info: {
         color: 'black',
+        fontFamily: 'sans-serif-light',
         fontWeight: '500',
-        marginTop: 20
+        marginTop: 20,
+        lineHeight: 25,
     },
     note: {
-        marginTop: 10
+        marginTop: 5,
+        fontFamily: 'sans-serif-light'
     }
 });
 

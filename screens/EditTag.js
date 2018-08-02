@@ -221,7 +221,7 @@ class EditTag extends React.Component {
                         <HeaderIcon navigation={this.props.navigation} />
                     </View>
                     <View style={headerStyle.headerRight}>
-                        <Text style={headerStyle.headerText}>Edit Tags</Text>
+                        <Text style={headerStyle.headerText}>Edit</Text>
                     </View>
                 </View>
                 <Seperator />
