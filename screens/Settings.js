@@ -89,6 +89,24 @@ class Settings extends React.Component {
         }
     }
 
+    async backup() {
+        ToastAndroid.show('Backing up...', ToastAndroid.SHORT);
+        await GoogleSignin.configure({
+            scopes: ['https://www.googleapis.com/auth/drive.appdata']
+        });
+        const user = await GoogleSignin.currentUserAsync();
+        if (!user) return;
+        const accessToken = await RNGoogleSignin.getAccessToken(user);
+
+        try {
+            await backup(accessToken);
+            const lastBackup = await AsyncStorage.getItem('lastBackup');
+            this.setState({ lastBackup }, () => ToastAndroid.show('Success!', ToastAndroid.SHORT));
+        } catch (e) {
+            ToastAndroid.show('Failed to backup. Make sure your internet connection is working', ToastAndroid.LONG);
+        }
+    }
+
     render() {
         const googleAccount = this.state.googleAccount;
 
@@ -113,14 +131,17 @@ class Settings extends React.Component {
                 <Seperator />
                 <View style={styles.bottom}>
                     <View style={styles.backup}>
-                        <Button
-                            title={googleAccount ? 'Disconnect ' : 'Connect a Google account'}
-                            onPress={() => this.signIn()}
-                        />
                         <Text style={styles.info}>
                             {googleAccount && `${googleAccount} connected\n`}
                             Last backup: {this.state.lastBackup}
                         </Text>
+                        {googleAccount && <Button title="backup now" onPress={() => this.backup()} />}
+                        <View style={{ marginTop: 8 }}>
+                            <Button
+                                title={googleAccount ? 'Disconnect ' : 'Connect a Google account'}
+                                onPress={() => this.signIn()}
+                            />
+                        </View>
                     </View>
                     <Seperator />
                     <TouchableNativeFeedback>
@@ -175,8 +196,8 @@ const styles = StyleSheet.create({
         color: 'black',
         fontFamily: 'sans-serif-light',
         fontWeight: '500',
-        marginTop: 20,
-        lineHeight: 25,
+        margin: 20,
+        lineHeight: 25
     },
     note: {
         marginTop: 5,

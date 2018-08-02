@@ -45,12 +45,13 @@ class Stat extends React.Component {
         for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
             dates.push(dateString(d, 'key'));
         }
-        const pairs = await AsyncStorage.multiGet(dates);
+        let pairs = await AsyncStorage.multiGet(dates);
 
         const tagColors =
             JSON.parse(await AsyncStorage.getItem('tagColors')) ||
             defaultTagColors;
 
+        pairs = pairs.filter(p => p[1] !== null);
         let totalDays = pairs.length;
 
         const tags = {};
@@ -164,7 +165,7 @@ class Stat extends React.Component {
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
                             <Text style={{fontFamily: 'sans-serif-light'}}>
-                                Total {this.state.totalDays} days recorded
+                                Total {this.state.totalDays} days recorded in the selected range
                             </Text>
                         </View>
                     }
