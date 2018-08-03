@@ -1,81 +1,110 @@
 import React from 'react';
-import {
-    View,
-    ScrollView,
-    Text,
-    StyleSheet,
-    TouchableOpacity
-} from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
 import dateString from '../utilities/dateString';
 import Tag from './Tag';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const DateInfo = props => {
-    const dateStr = dateString(new Date(props.date), 'long');
+class DateInfo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            date: new Date(props.date),
+            ready: false,
+            message: 'Loading...'
+        };
+        this.load();
+    }
+    async load() {
+        const data = JSON.parse(await AsyncStorage.getItem(dateString(this.state.date, 'key')));
+        if (!data) {
+            this.setState({
+                message: 'No record!'
+            });
+            return;
+        }
+        this.setState({
+            selected: data.selected,
+            note: data.note,
+            ready: true
+        });
+    }
+    next(backward) {
+        const date = new Date(this.state.date);
+        date.setDate(date.getDate() + (backward ? -1 : 1));
+        this.setState({ date, ready: false }, () => this.load());
+    }
 
-    const tags = props.selected.map((tag, i) => (
-        <Tag key={tag.name} tag={tag} color={props.tagColors[tag.name]} />
-    ));
+    render() {
+        const dateStr = dateString(this.state.date, 'long');
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.date}> {dateStr} </Text>
-            <View style={styles.tags}>{tags}</View>
-            <View style={styles.bottom}>
-                <View style={styles.noteContainer}>
-                    <ScrollView>
-                        <Text style={styles.note}>{props.note}</Text>
-                    </ScrollView>
+        return (
+            <View style={styles.container}>
+                <Text style={styles.date}>{dateStr}</Text>
+                {this.state.ready ? (
+                    <View>
+                        <View style={styles.tags}>
+                            {this.state.selected.map((tag, i) => (
+                                <Tag key={tag.name} tag={tag} color={this.props.tagColors[tag.name]} />
+                            ))}
+                        </View>
+                        <ScrollView>
+                            <Text style={styles.note}>{this.state.note}</Text>
+                        </ScrollView>
+                    </View>
+                ) : (
+                    <Text style={styles.message}>{this.state.message}</Text>
+                )}
+                <View style={styles.footer}>
+                    <TouchableOpacity style={styles.icon} onPress={() => this.next(true)}>
+                        <Icon name="arrow-back" size={32} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.icon} onPress={this.props.close}>
+                        <Icon name="close" size={32} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.icon} onPress={() => this.next()}>
+                        <Icon name="arrow-forward" size={32} />
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={props.close}>
-                    <Icon name="close" size={32} />
-                </TouchableOpacity>
             </View>
-        </View>
-    );
-};
+        );
+    }
+}
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
         backgroundColor: 'rgba(255, 255, 255, .95)',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 30,
+        paddingTop: 50,
         paddingLeft: 20,
         paddingRight: 20
     },
     date: {
         fontSize: 24,
         fontFamily: 'sans-serif-light',
-        color: 'black',
+        color: 'black'
     },
     tags: {
-        margin: 20,
+        margin: 15,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center'
     },
     note: {
         textAlign: 'center',
-        fontFamily: 'sans-serif-light',
+        fontFamily: 'sans-serif-light'
     },
-    bottom: {
-        flex: 1,
-        alignItems: 'center'
+    footer: {
+        position: 'absolute',
+        flexDirection: 'row',
+        bottom: 0
     },
-    noteContainer: {
-        flex: 5
+    icon: {
+        margin: 15
     },
-    closeButton: {
-        flex: 1
+    message: {
+        margin: 15,
     }
 });
 

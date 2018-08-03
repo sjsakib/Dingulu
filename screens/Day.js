@@ -156,7 +156,7 @@ class Day extends React.Component {
             />
         ));
         if (selected.length === 0) {
-            selected = <Text>Select one or more tags</Text>;
+            selected = <Text style={styles.placeholder}>Select one or more tags...</Text>;
         }
 
         const dateStr = dateString(this.state.date, 'long');
@@ -213,6 +213,9 @@ const styles = StyleSheet.create({
         fontSize: 24,
         color: 'black',
         fontFamily: 'sans-serif-light'
+    },
+    placeholder: {
+        fontFamily: 'sans-serif-light',
     }
 });
 

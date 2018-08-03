@@ -135,6 +135,9 @@ class Settings extends React.Component {
                             {googleAccount && `${googleAccount} connected\n`}
                             Last backup: {this.state.lastBackup}
                         </Text>
+                        <Text style={styles.infoSmall}>
+                            Automatic backup is done every time the app starts, if an a google account is connected and an internet connection is available.
+                        </Text>
                         {googleAccount && <Button title="backup now" onPress={() => this.backup()} />}
                         <View style={{ marginTop: 8 }}>
                             <Button
@@ -196,12 +199,22 @@ const styles = StyleSheet.create({
         color: 'black',
         fontFamily: 'sans-serif-light',
         fontWeight: '500',
-        margin: 20,
-        lineHeight: 25
+        // margin: 20,
+        lineHeight: 20,
+        textAlign: 'center',
+    },
+    infoSmall: {
+        fontFamily: 'sans-serif-light',
+        textAlign: 'center',
+        paddingLeft: 30,
+        paddingRight: 30,
+        marginTop: 5,
+        marginBottom: 20,
+        fontSize: 12,
     },
     note: {
         marginTop: 5,
-        fontFamily: 'sans-serif-light'
+        fontFamily: 'sans-serif-light',
     }
 });
 

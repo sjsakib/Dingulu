@@ -8,7 +8,8 @@ import {
     ActivityIndicator,
     ScrollView,
     TouchableOpacity,
-    DatePickerAndroid
+    DatePickerAndroid,
+    Modal
 } from 'react-native';
 import { HeaderIcon, TagListItem, DateInfo, Seperator } from '../components';
 import { defaultTagColors } from '../constants';
@@ -18,8 +19,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Stat extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Stat',
-        drawerIcon: ({tintColor}) => <Icon color={tintColor} size={24} name="bubble-chart" />
+        drawerLabel: 'Countings',
+        drawerIcon: ({ tintColor }) => <Icon color={tintColor} size={24} name="insert-chart" />
     });
 
     constructor(props) {
@@ -30,7 +31,8 @@ class Stat extends React.Component {
         this.state = {
             start,
             end: new Date(),
-            isReady: false
+            isReady: false,
+            selectedDate: null
         };
     }
 
@@ -47,9 +49,7 @@ class Stat extends React.Component {
         }
         let pairs = await AsyncStorage.multiGet(dates);
 
-        const tagColors =
-            JSON.parse(await AsyncStorage.getItem('tagColors')) ||
-            defaultTagColors;
+        const tagColors = JSON.parse(await AsyncStorage.getItem('tagColors')) || defaultTagColors;
 
         pairs = pairs.filter(p => p[1] !== null);
         let totalDays = pairs.length;
@@ -76,11 +76,7 @@ class Stat extends React.Component {
                     tags[name] = {
                         count: 0,
                         color: tagColors[name],
-                        levels: [
-                            { count: 0, dates: [] },
-                            { count: 0, dates: [] },
-                            { count: 0, dates: [] }
-                        ]
+                        levels: [{ count: 0, dates: [] }, { count: 0, dates: [] }, { count: 0, dates: [] }]
                     };
                 }
                 const tag = tags[name];
@@ -120,7 +116,8 @@ class Stat extends React.Component {
         const date = point === 'start' ? this.state.start : this.state.end;
         const { action, year, month, day } = await DatePickerAndroid.open({
             date,
-            maxDate: new Date()
+            maxDate: point === 'start' ? this.state.end : new Date(),
+            minDate: point === 'end' ? this.state.start : undefined
         });
         if (action === DatePickerAndroid.dismissedAction) return;
         this.setState({
@@ -154,30 +151,33 @@ class Stat extends React.Component {
                 <FlatList
                     data={this.state.data}
                     renderItem={({ item }) => (
-                        <TagListItem
-                            showDate={date =>
-                                this.setState({ selectedDate: date })
-                            }
-                            {...item}
-                        />
+                        <TagListItem showDate={date => this.setState({ selectedDate: date })} {...item} />
                     )}
                     keyExtractor={item => item.name}
                     ListHeaderComponent={
                         <View style={styles.listHeader}>
-                            <Text style={{fontFamily: 'sans-serif-light'}}>
-                                Total {this.state.totalDays} days recorded in the selected range
+                            <Text style={styles.info}>
+                                Total {this.state.totalDays} days recorded in the selected range{'\n'}
+                            </Text>
+                        </View>
+                    }
+                    ListFooterComponent={
+                        <View style={styles.listHeader}>
+                            <Text style={styles.info}>
+                                Tap the dates on top to change range{'\n'}
+                                Tap on items to expand{'\n'}
+                                Tap on a date in a list to see that day
                             </Text>
                         </View>
                     }
                 />
-                {selectedDate && (
+                <Modal transparent onRequestClose={() => this.setState({ selectedDate: null })} visible={selectedDate !== null}>
                     <DateInfo
                         date={selectedDate}
                         tagColors={this.state.tagColors}
                         close={() => this.setState({ selectedDate: null })}
-                        {...this.state.dateDict[selectedDate]}
                     />
-                )}
+                </Modal>
             </View>
         );
     }
@@ -185,13 +185,19 @@ class Stat extends React.Component {
 
 const styles = StyleSheet.create({
     listHeader: {
-        height: 50,
+        padding: 10,
+        paddingTop: 15,
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white'
+        justifyContent: 'center'
+        // backgroundColor: 'white'
     },
     link: {
         color: '#2196F3'
+    },
+    info: {
+        fontFamily: 'sans-serif-light',
+        textAlign: 'center',
+        lineHeight: 20
     }
 });
 
