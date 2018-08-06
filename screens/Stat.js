@@ -76,13 +76,14 @@ class Stat extends React.Component {
                     tags[name] = {
                         count: 0,
                         color: tagColors[name],
-                        levels: [{ count: 0, dates: [] }, { count: 0, dates: [] }, { count: 0, dates: [] }]
+                        levels: {}
                     };
                 }
                 const tag = tags[name];
                 tag.count++;
                 tag.percentage = Math.round(tag.count / totalDays * 100);
 
+                if (!tag.levels[level]) tag.levels[level] = { count: 0, dates: [] };
                 const lTag = tag.levels[level];
                 lTag.count++;
                 lTag.percentage = Math.round(lTag.count / totalDays * 100);
@@ -94,14 +95,14 @@ class Stat extends React.Component {
         const names = Object.keys(tags);
         for (let i = 0; i < names.length; i++) {
             const name = names[i];
-            tagList.push({ name: name, ...tags[name] });
+            const tag = tags[name];
+            const levels = Object.keys(tag.levels).map(l => ({ level: l, ...tag.levels[l] }));
+            levels.sort((l1, l2) => l2.count - l1.count);
+            tagList.push({ name, ...tag, levels });
         }
 
-        tagList.sort((t1, t2) => {
-            if (t1.count > t2.count) return -1;
-            else if (t1.count === t2.count) return 0;
-            return 1;
-        });
+        tagList.sort((t1, t2) => t2.count - t1.count);
+        console.log(tagList);
 
         this.setState({
             data: tagList,
@@ -171,7 +172,10 @@ class Stat extends React.Component {
                         </View>
                     }
                 />
-                <Modal transparent onRequestClose={() => this.setState({ selectedDate: null })} visible={selectedDate !== null}>
+                <Modal
+                    transparent
+                    onRequestClose={() => this.setState({ selectedDate: null })}
+                    visible={selectedDate !== null}>
                     <DateInfo
                         date={selectedDate}
                         tagColors={this.state.tagColors}

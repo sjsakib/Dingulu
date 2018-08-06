@@ -4,10 +4,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Tag from './Tag';
 
 // returns three different tags from one tag with different levels
-function levelTag(tag, addTag, color) {
+function levelTag(tag, addTag, color, levels) {
     const leveledTags = [];
-    for (let i = 0; i < 3; i++) {
-        const leveledTag = { ...tag, level: i };
+    levels = levels || ['somehow', '', 'very'];
+    for (let i = 0; i < levels.length; i++) {
+        const leveledTag = { ...tag, level: levels[i] };
         leveledTags.push(
             <Tag
                 onPress={() => addTag(leveledTag)}
@@ -37,10 +38,8 @@ const LevelOptions = props => (
 
 const styles = StyleSheet.create({
     overlay: {
-        position: 'absolute',
         display: 'flex',
-        width: '100%',
-        height: '100%',
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, .8)'

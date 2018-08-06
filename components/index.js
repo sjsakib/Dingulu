@@ -5,6 +5,7 @@ import Note from './Note';
 import TagListItem from './TagListItem';
 import DateInfo from './DateInfo';
 import Seperator from './Seperator';
+import EditTagInfo from './EditTagInfo';
 
 export {
     Tag,
@@ -14,4 +15,5 @@ export {
     TagListItem,
     DateInfo,
     Seperator,
+    EditTagInfo,
 };

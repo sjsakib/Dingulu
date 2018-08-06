@@ -45,7 +45,7 @@ class SubTagListItem extends React.Component {
                                 color="white"
                             />
                             <Text style={styles.white}>
-                                {leveledTag(this.props.name, this.props.level).toUpperCase()}
+                                {(this.props.level + this.props.name).toUpperCase()}
                             </Text>
                         </View>
                         <View style={styles.side}>
@@ -128,9 +128,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: 'white',
-        padding: 2,
+        padding: 10,
         paddingRight: 12,
-        borderRadius: 8,
+        borderRadius: 15,
         margin: 2,
 
     },

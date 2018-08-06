@@ -1,13 +1,16 @@
 const defaultTags = [
-    { name: 'good', level: 1 },
-    { name: 'happy', level: 1 },
-    { name: 'productive', level: 1 },
-    { name: 'fun', level: 1 },
-    { name: 'sad', level: 1 },
-    { name: 'stressful', level: 1 },
-    { name: 'boring', level: 1 },
-    { name: 'bad', level: 1 }
+    { name: 'good', level: '' },
+    { name: 'happy', level: '' },
+    { name: 'productive', level: '' },
+    { name: 'fun', level: '' },
+    { name: 'sad', level: '' },
+    { name: 'stressful', level: '' },
+    { name: 'boring', level: '' },
+    { name: 'bad', level: '' }
 ];
+
+const defaultTagLevels = {
+};
 
 const defaultTagColors = {
     good: '#4CAF50',

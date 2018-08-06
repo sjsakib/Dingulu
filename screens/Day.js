@@ -8,7 +8,8 @@ import {
     ActivityIndicator,
     TouchableOpacity,
     ScrollView,
-    DatePickerAndroid
+    DatePickerAndroid,
+    Modal
 } from 'react-native';
 import { Tag, Note, LevelOptions, HeaderIcon, Seperator } from '../components';
 import { defaultTags, defaultTagColors } from '../constants';
@@ -18,7 +19,7 @@ import { dateString, headerStyle } from '../utilities';
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         drawerLabel: 'Day',
-        drawerIcon: ({tintColor}) => <Icon color={tintColor} size={24} name="today" />
+        drawerIcon: ({ tintColor }) => <Icon color={tintColor} size={24} name="today" />
     });
 
     constructor(props) {
@@ -42,18 +43,11 @@ class Day extends React.Component {
 
     // load all the tags and and data of the day from storage
     async load() {
-        const tags =
-            JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
-        const tagColors =
-            JSON.parse(await AsyncStorage.getItem('tagColors')) ||
-            defaultTagColors;
+        const tags = JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
+        const tagColors = JSON.parse(await AsyncStorage.getItem('tagColors')) || defaultTagColors;
 
-        const dataString = await AsyncStorage.getItem(
-            dateString(this.state.date, 'key')
-        );
-        const { selected, note } = dataString
-            ? JSON.parse(dataString)
-            : { selected: [], note: '' };
+        const dataString = await AsyncStorage.getItem(dateString(this.state.date, 'key'));
+        const { selected, note } = dataString ? JSON.parse(dataString) : { selected: [], note: '' };
 
         // have to filter the tags already selected
         const selectedNames = selected.map(t => t.name);
@@ -63,16 +57,14 @@ class Day extends React.Component {
             selected,
             note,
             tagColors,
+            tagLevels: {},
             isReady: true
         });
     }
 
     async save() {
         const { selected, note, date } = this.state;
-        await AsyncStorage.setItem(
-            dateString(date, 'key'),
-            JSON.stringify({ selected, note })
-        );
+        await AsyncStorage.setItem(dateString(date, 'key'), JSON.stringify({ selected, note }));
     }
 
     activateTag(tag) {
@@ -99,7 +91,7 @@ class Day extends React.Component {
     removeTag(i) {
         const selected = this.state.selected.slice();
         const tag = selected[i];
-        tag.level = 1;
+        tag.level = '';
         selected.splice(i, 1);
         this.setState(
             {
@@ -135,31 +127,20 @@ class Day extends React.Component {
     render() {
         if (!this.state.isReady) return <ActivityIndicator />;
 
-        const active = this.state.active;
-        const tagColors = this.state.tagColors;
+        const { active, tagColors, tagLevels } = this.state;
 
         const tags = this.state.tags.map((tag, i) => (
-            <Tag
-                onPress={() => this.activateTag(tag)}
-                key={tag.name}
-                tag={tag}
-                color={tagColors[tag.name]}
-            />
+            <Tag onPress={() => this.activateTag(tag)} key={tag.name} tag={tag} color={tagColors[tag.name]} />
         ));
         let selected = this.state.selected.map((tag, i) => (
-            <Tag
-                selected
-                onPress={() => this.removeTag(i)}
-                key={tag.name}
-                tag={tag}
-                color={tagColors[tag.name]}
-            />
+            <Tag selected onPress={() => this.removeTag(i)} key={tag.name} tag={tag} color={tagColors[tag.name]} />
         ));
         if (selected.length === 0) {
             selected = <Text style={styles.placeholder}>Select one or more tags...</Text>;
         }
 
         const dateStr = dateString(this.state.date, 'long');
+        console.log(active);
 
         return (
             <View style={styles.container}>
@@ -178,18 +159,17 @@ class Day extends React.Component {
                 <Seperator />
                 <View style={[styles.tags, styles.segment]}>{tags}</View>
                 <Seperator />
-                <Note
-                    updateNote={this.updateNote.bind(this)}
-                    text={this.state.note}
-                />
-                {active && (
+                <Note updateNote={this.updateNote.bind(this)} text={this.state.note} />
+
+                <Modal transparent visible={active !== null} onRequestClose={() => this.setState({ active: null })}>
                     <LevelOptions
                         tag={active}
-                        color={tagColors[active.name]}
+                        color={active && tagColors[active.name]}
+                        levels={active && tagLevels[active.name]}
                         onCancel={() => this.activateTag(null)}
                         addTag={this.addTag.bind(this)}
                     />
-                )}
+                </Modal>
             </View>
         );
     }
@@ -215,7 +195,7 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif-light'
     },
     placeholder: {
-        fontFamily: 'sans-serif-light',
+        fontFamily: 'sans-serif-light'
     }
 });
 
