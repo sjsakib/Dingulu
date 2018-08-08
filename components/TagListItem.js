@@ -3,11 +3,6 @@ import { Text, View, StyleSheet, FlatList, TouchableNativeFeedback } from 'react
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import dateString from '../utilities/dateString';
 
-function leveledTag(name, level) {
-    const levelMap = ['somehow', '', 'very'];
-    return `${levelMap[level] || ''} ${name}`;
-}
-
 const DateListItem = props => {
     const dateStr = dateString(new Date(props.date), 'long');
     return (
@@ -45,7 +40,7 @@ class SubTagListItem extends React.Component {
                                 color="white"
                             />
                             <Text style={styles.white}>
-                                {(this.props.level + this.props.name).toUpperCase()}
+                                {(this.props.level + ' ' + this.props.name).toUpperCase()}
                             </Text>
                         </View>
                         <View style={styles.side}>

@@ -6,7 +6,7 @@ import Tag from './Tag';
 // returns three different tags from one tag with different levels
 function levelTag(tag, addTag, color, levels) {
     const leveledTags = [];
-    levels = levels || ['somehow', '', 'very'];
+    if (!levels || levels.length === 0) levels = ['somehow', '', 'very'];
     for (let i = 0; i < levels.length; i++) {
         const leveledTag = { ...tag, level: levels[i] };
         leveledTags.push(
@@ -23,7 +23,7 @@ function levelTag(tag, addTag, color, levels) {
 
 const LevelOptions = props => (
     <View style={styles.overlay}>
-        {levelTag(props.tag, props.addTag, props.color)}
+        {levelTag(props.tag, props.addTag, props.color, props.levels)}
         <TouchableOpacity
             onPress={props.onCancel}
             style={{

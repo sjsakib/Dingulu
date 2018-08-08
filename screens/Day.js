@@ -12,7 +12,7 @@ import {
     Modal
 } from 'react-native';
 import { Tag, Note, LevelOptions, HeaderIcon, Seperator } from '../components';
-import { defaultTags, defaultTagColors } from '../constants';
+import { defaultTags, defaultTagColors, defaultTagLevels } from '../constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { dateString, headerStyle } from '../utilities';
 
@@ -45,6 +45,7 @@ class Day extends React.Component {
     async load() {
         const tags = JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
         const tagColors = JSON.parse(await AsyncStorage.getItem('tagColors')) || defaultTagColors;
+        const tagLevels = JSON.parse(await AsyncStorage.getItem('tagLevels')) || defaultTagLevels;
 
         const dataString = await AsyncStorage.getItem(dateString(this.state.date, 'key'));
         const { selected, note } = dataString ? JSON.parse(dataString) : { selected: [], note: '' };
@@ -57,7 +58,7 @@ class Day extends React.Component {
             selected,
             note,
             tagColors,
-            tagLevels: {},
+            tagLevels,
             isReady: true
         });
     }

@@ -10,6 +10,14 @@ const defaultTags = [
 ];
 
 const defaultTagLevels = {
+    good: ['somehow', '', 'very'],
+    happy: ['somehow', '', 'very'],
+    productive: ['somehow', '', 'very'],
+    fun: ['somehow', '', 'very'],
+    sad: ['somehow', '', 'very'],
+    stressful: ['somehow', '', 'very'],
+    boring: ['somehow', '', 'very'],
+    bad: ['somehow', '', 'very'],
 };
 
 const defaultTagColors = {
@@ -23,4 +31,4 @@ const defaultTagColors = {
     bad: '#212121'
 };
 
-export { defaultTags, defaultTagColors };
+export { defaultTags, defaultTagColors, defaultTagLevels };

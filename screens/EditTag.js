@@ -12,13 +12,13 @@ import {
     Alert
 } from 'react-native';
 import { HeaderIcon, Seperator, EditTagInfo } from '../components';
-import { defaultTags, defaultTagColors } from '../constants';
+import { defaultTags, defaultTagColors, defaultTagLevels } from '../constants';
 import { headerStyle } from '../utilities';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class EditTag extends React.Component {
     static navigationOptions = ({ navigation }) => ({
-        drawerLabel: 'Edit',
+        drawerLabel: 'Edit Labels',
         drawerIcon: ({ tintColor }) => <Icon color={tintColor} size={24} name="edit" />
     });
 
@@ -29,15 +29,20 @@ class EditTag extends React.Component {
             editingNew: false,
             newName: ''
         };
+    }
+
+    componentDidMount() {
         this.load();
     }
 
     async load() {
         const tags = JSON.parse(await AsyncStorage.getItem('tags')) || defaultTags;
         const tagColors = JSON.parse(await AsyncStorage.getItem('tagColors')) || defaultTagColors;
+        const tagLevels = JSON.parse(await AsyncStorage.getItem('tagLevels')) || defaultTagLevels;
         this.setState({
             tags,
             tagColors,
+            tagLevels,
             isReady: true
         });
     }
@@ -45,6 +50,7 @@ class EditTag extends React.Component {
     async updateName(name, index, oldName) {
         const tags = this.state.tags.slice();
         const tagColors = { ...this.state.tagColors };
+        const tagLevels = {...this.state.tagLevels };
 
         name = name.toLowerCase();
 
@@ -56,10 +62,12 @@ class EditTag extends React.Component {
         }
 
         tagColors[name] = tagColors[oldName];
+        tagLevels[name] = tagLevels[oldName];
         tags[index].name = name;
 
         await AsyncStorage.setItem('tags', JSON.stringify(tags));
         await AsyncStorage.setItem('tagColors', JSON.stringify(tagColors));
+        await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
         this.setState({
             tags,
             tagColors
@@ -95,22 +103,33 @@ class EditTag extends React.Component {
         }
 
         const tagColors = { ...this.state.tagColors };
+        const tagLevels = { ...this.state.tagLevels };
         tags.push({ name: newName, level: '' });
         tagColors[newName] = '#607D8B';
+        tagLevels[newName] = ['somehow', '', 'very'];
 
         await AsyncStorage.setItem('tags', JSON.stringify(tags));
         await AsyncStorage.setItem('tagColors', JSON.stringify(tagColors));
+        await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
 
         this.setState({
             tags,
             tagColors,
+            tagLevels,
             editingNew: false
         });
     }
 
+    async updateLevels(name, levels) {
+        const tagLevels = {...this.state.tagLevels};
+        tagLevels[name] = levels;
+        await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
+
+    }
+
     render() {
         if (!this.state.isReady) return <ActivityIndicator />;
-        const tagColors = this.state.tagColors;
+        const { tagColors, tagLevels } = this.state;
 
         const footer = (
             <View style={[styles.tagContainer, styles.listFooter]}>
@@ -139,7 +158,7 @@ class EditTag extends React.Component {
                         <HeaderIcon navigation={this.props.navigation} />
                     </View>
                     <View style={headerStyle.headerRight}>
-                        <Text style={headerStyle.headerText}>Edit</Text>
+                        <Text style={headerStyle.headerText}>Edit Labels</Text>
                     </View>
                 </View>
                 <Seperator />
@@ -150,8 +169,10 @@ class EditTag extends React.Component {
                             {...item}
                             color={tagColors[item.name]}
                             index={index}
+                            levels={tagLevels[item.name]}
                             updateName={this.updateName.bind(this)}
                             updateColor={this.updateColor.bind(this)}
+                            updateLevels={this.updateLevels.bind(this)}
                             remove={this.remove.bind(this)}
                         />
                     )}
