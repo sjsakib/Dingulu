@@ -101,8 +101,8 @@ android {
         applicationId "com.dingulu"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 32
-        versionName "32.0"
+        versionCode 33
+        versionName "2.01"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-admob')
     compile project(':react-native-google-signin')
     compile project(':react-native-vector-icons')
     compile project(':react-native-push-notification')

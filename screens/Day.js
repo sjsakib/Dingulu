@@ -15,6 +15,7 @@ import { Tag, Note, LevelOptions, HeaderIcon, Seperator } from '../components';
 import { defaultTags, defaultTagColors, defaultTagLevels } from '../constants';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { dateString, headerStyle } from '../utilities';
+import { AdMobBanner } from 'react-native-admob';
 
 class Day extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -171,6 +172,15 @@ class Day extends React.Component {
                         addTag={this.addTag.bind(this)}
                     />
                 </Modal>
+
+                <View style={[styles.ad]}>
+                    <AdMobBanner
+                        adSize="banner"
+                        testDevices={['6D25C6DA74B2F92F7E7B4F9609161FFE']}
+                        adUnitID="ca-app-pub-8928993131403831/3785561295"
+                        onAdFailedToLoad={error => console.error(error)}
+                    />
+                </View>
             </View>
         );
     }
@@ -197,6 +207,10 @@ const styles = StyleSheet.create({
     },
     placeholder: {
         fontFamily: 'sans-serif-light'
+    },
+    ad: {
+        alignItems: 'center',
+        backgroundColor: 'white',
     }
 });
 

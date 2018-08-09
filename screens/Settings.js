@@ -14,6 +14,7 @@ import { HeaderIcon, Seperator } from '../components';
 import { backup, restore, timeString, scheduleNotification, headerStyle } from '../utilities';
 import { GoogleSignin } from 'react-native-google-signin';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AdMobBanner } from 'react-native-admob';
 
 const { RNGoogleSignin } = NativeModules;
 
@@ -136,7 +137,8 @@ class Settings extends React.Component {
                             Last backup: {this.state.lastBackup}
                         </Text>
                         <Text style={styles.infoSmall}>
-                            Automatic backup is done every time the app starts, if an a google account is connected and an internet connection is available.
+                            Automatic backup is done every time the app starts, if an a google account is connected and
+                            an internet connection is available.
                         </Text>
                         {googleAccount && <Button title="backup now" onPress={() => this.backup()} />}
                         <View style={{ marginTop: 8 }}>
@@ -153,6 +155,14 @@ class Settings extends React.Component {
                             <Text style={styles.creditText}>sjsakib.bd@gmail.com</Text>
                         </View>
                     </TouchableNativeFeedback>
+                </View>
+                <View style={[styles.ad]}>
+                    <AdMobBanner
+                        adSize="mediumRectangle"
+                        testDevices={['6D25C6DA74B2F92F7E7B4F9609161FFE']}
+                        adUnitID="ca-app-pub-8928993131403831/3785561295"
+                        onAdFailedToLoad={error => console.error(error)}
+                    />
                 </View>
             </View>
         );
@@ -201,7 +211,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         // margin: 20,
         lineHeight: 20,
-        textAlign: 'center',
+        textAlign: 'center'
     },
     infoSmall: {
         fontFamily: 'sans-serif-light',
@@ -210,11 +220,15 @@ const styles = StyleSheet.create({
         paddingRight: 30,
         marginTop: 5,
         marginBottom: 20,
-        fontSize: 12,
+        fontSize: 12
     },
     note: {
         marginTop: 5,
-        fontFamily: 'sans-serif-light',
+        fontFamily: 'sans-serif-light'
+    },
+    ad: {
+        alignItems: 'center',
+        backgroundColor: 'white',
     }
 });
 
