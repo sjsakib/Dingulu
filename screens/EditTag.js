@@ -15,6 +15,7 @@ import { HeaderIcon, Seperator, EditTagInfo } from '../components';
 import { defaultTags, defaultTagColors, defaultTagLevels } from '../constants';
 import { headerStyle } from '../utilities';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AdMobBanner } from 'react-native-admob';
 
 class EditTag extends React.Component {
     static navigationOptions = ({ navigation }) => ({
@@ -50,7 +51,7 @@ class EditTag extends React.Component {
     async updateName(name, index, oldName) {
         const tags = this.state.tags.slice();
         const tagColors = { ...this.state.tagColors };
-        const tagLevels = {...this.state.tagLevels };
+        const tagLevels = { ...this.state.tagLevels };
 
         name = name.toLowerCase();
 
@@ -121,10 +122,9 @@ class EditTag extends React.Component {
     }
 
     async updateLevels(name, levels) {
-        const tagLevels = {...this.state.tagLevels};
+        const tagLevels = { ...this.state.tagLevels };
         tagLevels[name] = levels;
         await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
-
     }
 
     render() {
@@ -179,6 +179,14 @@ class EditTag extends React.Component {
                     keyExtractor={(tag, i) => tag.name}
                     ListFooterComponent={footer}
                 />
+                <View style={[styles.ad]}>
+                    <AdMobBanner
+                        adSize="banner"
+                        testDevices={['6D25C6DA74B2F92F7E7B4F9609161FFE']}
+                        adUnitID="ca-app-pub-8928993131403831/9850446192"
+                        onAdFailedToLoad={error => console.error(error)}
+                    />
+                </View>
             </View>
         );
     }
@@ -203,6 +211,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10
+    },
+    ad: {
+        alignItems: 'center',
+        backgroundColor: 'white',
     }
 });
 

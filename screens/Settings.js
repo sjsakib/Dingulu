@@ -160,7 +160,7 @@ class Settings extends React.Component {
                     <AdMobBanner
                         adSize="mediumRectangle"
                         testDevices={['6D25C6DA74B2F92F7E7B4F9609161FFE']}
-                        adUnitID="ca-app-pub-8928993131403831/3785561295"
+                        adUnitID="ca-app-pub-8928993131403831/3452666607"
                         onAdFailedToLoad={error => console.error(error)}
                     />
                 </View>

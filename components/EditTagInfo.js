@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'sans-serif-light',
         fontSize: 24,
+        color: 'black',
     },
     label: {
         fontSize: 20,

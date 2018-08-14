@@ -28,6 +28,7 @@ class Dingulu extends React.Component {
                     title: 'How was the day?',
                     message: 'Would you like to log your day now?',
                     actions: '["Remind Later"]',
+                    number: '10',
                     date: new Date(Date.now() + 60 * 60 * 1000) // Remind an hour later
                 });
             }

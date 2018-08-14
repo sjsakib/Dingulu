@@ -13,6 +13,7 @@ export default function scheduleNotification(hour, minute) {
         message: 'Would you like to log your day?',
         actions: '["Remind Later"]',
         date: time,
+        number: '10',
         repeatType: 'day'
     });
 }
