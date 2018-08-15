@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
     },
     settingsText: {
-        color: 'black',
+        color: '#555',
         fontWeight: '500',
         fontFamily: 'sans-serif-light'
     },
@@ -201,12 +201,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     creditText: {
-        color: 'black',
+        color: '#555',
         fontWeight: '200',
         fontFamily: 'sans-serif-condensed'
     },
     info: {
-        color: 'black',
+        color: '#555',
         fontFamily: 'sans-serif-light',
         fontWeight: '500',
         // margin: 20,

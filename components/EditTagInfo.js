@@ -94,8 +94,8 @@ class EditTagInfo extends React.Component {
                 ) : (
                     <TouchableNativeFeedback style={styles.addNew} onPress={() => this.setState({ editingNew: true })}>
                         <View style={styles.addNew}>
-                            <Icon name="add" size={24} />
-                            <Text> add new</Text>
+                            <Icon color="#555" name="add" size={24} />
+                            <Text style={{color: '#555'}}> ADD NEW</Text>
                         </View>
                     </TouchableNativeFeedback>
                 )}
@@ -121,6 +121,7 @@ class EditTagInfo extends React.Component {
                         <Text style={styles.title}>Editing Label: {this.state.name}</Text>
                         <Text style={styles.label}>Name</Text>
                         <TextInput
+                            style={styles.levelInput}
                             underlineColorAndroid="grey"
                             style={{width: 100}}
                             defaultValue={this.props.name}
@@ -157,7 +158,7 @@ class EditTagInfo extends React.Component {
                             data={this.state.levels}
                             renderItem={({ item, index }) => (
                                 <View style={styles.level}>
-                                    <Icon size={20} name="edit" />
+                                    <Icon size={20} color="#555" name="edit" />
                                     <TextInput
                                         underlineColorAndroid="grey"
                                         placeholder="<No Modifier>"
@@ -173,7 +174,7 @@ class EditTagInfo extends React.Component {
                                                 { text: 'Cancel' }
                                             ])
                                         }>
-                                        <Icon size={24} name="delete" />
+                                        <Icon color="#555" size={24} name="delete" />
                                     </TouchableOpacity>
                                 </View>
                             )}
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     picker: {
         // height: 30,
         width: 200,
-        color: 'black'
+        color: '#555'
     },
     modal: {
         flex: 1,
@@ -228,17 +229,18 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     levelInput: {
-        flex: 1
+        flex: 1,
+        color: '#555',
     },
     title: {
         fontFamily: 'sans-serif-light',
         fontSize: 24,
-        color: 'black',
+        color: '#555',
     },
     label: {
         fontSize: 20,
         fontFamily: 'sans-serif-light',
-        color: 'black',
+        color: '#555',
         marginTop: 20,
 
     }

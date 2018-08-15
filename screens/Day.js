@@ -150,7 +150,7 @@ class Day extends React.Component {
                     <HeaderIcon navigation={this.props.navigation} />
                     <Text style={headerStyle.headerText}>{dateStr}</Text>
                     <TouchableOpacity onPress={() => this.setDate()}>
-                        <Icon color="black" name="event" size={26} />
+                        <Icon color="#555" name="event" size={26} />
                     </TouchableOpacity>
                 </View>
                 <Seperator />
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     },
     question: {
         fontSize: 24,
-        color: 'black',
+        color: '#555',
         fontFamily: 'sans-serif-light'
     },
     placeholder: {

@@ -45,7 +45,7 @@ class SubTagListItem extends React.Component {
                         </View>
                         <View style={styles.side}>
                             <Text style={styles.white}>
-                                {this.props.count} {this.props.percentage}%
+                                {this.props.count}    {this.props.percentage}%
                             </Text>
                         </View>
                     </View>
@@ -91,7 +91,7 @@ export default class TagListItem extends React.Component {
                         </View>
                         <View style={styles.side}>
                             <Text style={styles.white}>
-                                {this.props.count} {this.props.percentage}%
+                                {this.props.count}    {this.props.percentage}%
                             </Text>
                         </View>
                     </View>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: 'white',
         padding: 10,
-        paddingRight: 12,
+        paddingRight: 20,
         borderRadius: 15,
         margin: 2,
 

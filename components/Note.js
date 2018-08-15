@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-    Text,
-    Button,
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    ScrollView,
-    TextInput
-} from 'react-native';
+import { Text, Button, View, StyleSheet, TouchableOpacity, ScrollView, TextInput, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Note extends React.Component {
@@ -25,23 +17,6 @@ class Note extends React.Component {
     }
 
     render() {
-        if (this.state.editing) {
-            return (
-                <View style={styles.notepad}>
-                    <TextInput
-                        style={styles.input}
-                        multiline={true}
-                        defaultValue={this.state.text}
-                        numberOfLines={10}
-                        autoFocus={true}
-                        placeholder="Type your note here"
-                        onChangeText={text => this.setState({ text })}
-                    />
-                    <Button title="Save" onPress={() => this.handleSave()} />
-                </View>
-            );
-        }
-
         const noteText = this.props.text;
         const iconName = noteText ? 'edit' : 'add';
         const text = noteText || <Text>(No note)</Text>;
@@ -49,15 +24,27 @@ class Note extends React.Component {
             <View style={styles.note}>
                 <View style={styles.header}>
                     <Text style={styles.title}>Note</Text>
-                    <TouchableOpacity
-                        style={styles.editIcon}
-                        onPress={() => this.setState({ editing: true })}>
-                        <Icon color="black" name={iconName} size={30} />
+                    <TouchableOpacity style={styles.editIcon} onPress={() => this.setState({ editing: true })}>
+                        <Icon color="#555" name={iconName} size={30} />
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.noteText}>
                     <Text style={styles.noteTextStyle}>{text}</Text>
                 </ScrollView>
+                <Modal visible={this.state.editing} onRequestClose={() => this.handleSave()}>
+                    <View style={styles.notepad}>
+                        <TextInput
+                            style={styles.input}
+                            multiline={true}
+                            defaultValue={this.state.text}
+                            numberOfLines={10}
+                            autoFocus={true}
+                            placeholder="Type your note here..."
+                            onChangeText={text => this.setState({ text })}
+                        />
+                        <Button title="Save" onPress={() => this.handleSave()} />
+                    </View>
+                </Modal>
             </View>
         );
     }
@@ -81,7 +68,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        color: 'black',
+        color: '#555',
         fontFamily: 'sans-serif-light'
     },
     note: {
@@ -91,10 +78,10 @@ const styles = StyleSheet.create({
         paddingBottom: 0
     },
     noteText: {
-        marginTop: 10,
+        marginTop: 10
     },
     noteTextStyle: {
-        fontFamily: 'sans-serif-light',
+        fontFamily: 'sans-serif-light'
     },
     header: {
         flexDirection: 'row',

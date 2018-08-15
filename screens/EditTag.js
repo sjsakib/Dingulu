@@ -53,12 +53,12 @@ class EditTag extends React.Component {
         const tagColors = { ...this.state.tagColors };
         const tagLevels = { ...this.state.tagLevels };
 
-        name = name.toLowerCase();
+        name = name.trim().toLowerCase();
 
         if (name === oldName || !name) return;
 
         if (tags.map(t => t.name).includes(name)) {
-            alert('Tag already exists');
+            alert('Label already exists');
             return;
         }
 
@@ -71,7 +71,8 @@ class EditTag extends React.Component {
         await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
         this.setState({
             tags,
-            tagColors
+            tagColors,
+            tagLevels
         });
     }
 
@@ -89,7 +90,7 @@ class EditTag extends React.Component {
     }
 
     async addNewTag() {
-        const newName = this.state.newName.toLowerCase();
+        const newName = this.state.newName.trim().toLowerCase();
 
         if (!newName) {
             this.setState({ editingNew: false });
@@ -214,7 +215,6 @@ const styles = StyleSheet.create({
     },
     ad: {
         alignItems: 'center',
-        backgroundColor: 'white',
     }
 });
 

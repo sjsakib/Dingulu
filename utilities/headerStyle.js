@@ -9,7 +9,7 @@ const headerStyle = StyleSheet.create({
         alignItems: 'center',
     },
     headerText: {
-        color: 'black',
+        color: '#555',
         fontWeight: '500'
     },
     headerLeft: {
