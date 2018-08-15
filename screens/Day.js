@@ -142,7 +142,7 @@ class Day extends React.Component {
         }
 
         const dateStr = dateString(this.state.date, 'long');
-        console.log(active);
+        // console.log(active);
 
         return (
             <View style={styles.container}>

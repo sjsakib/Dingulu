@@ -1,11 +1,11 @@
 import React from 'react';
-import { DeviceEventEmitter, AsyncStorage, NativeModules } from 'react-native';
+import { DeviceEventEmitter, AsyncStorage, NativeModules, Alert, Linking } from 'react-native';
 import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import Day from './screens/Day';
 import Stat from './screens/Stat';
 import EditTag from './screens/EditTag';
 import Settings from './screens/Settings';
-import backup from './utilities/backup';
+import { backup, dateString } from './utilities';
 import scheduleNotification from './utilities/scheduleNotification';
 import PushNotification from 'react-native-push-notification';
 import { GoogleSignin } from 'react-native-google-signin';
@@ -13,6 +13,45 @@ import { GoogleSignin } from 'react-native-google-signin';
 const { RNGoogleSignin } = NativeModules;
 
 class Dingulu extends React.Component {
+    componentWillMount() {
+        this.scheduleNotification();
+        this.backup();
+        this.promptRating();
+    }
+
+    async promptRating() {
+        const installed = await AsyncStorage.getItem('installed');
+
+        if (!installed) {
+            await AsyncStorage.setItem('installed', dateString(new Date(), 'key'));
+            return;
+        }
+        const rated = await AsyncStorage.getItem('rated');
+        const d = new Date(new Date(installed));
+        d.setDate(d.getDate() + 5);
+
+        if (!rated && d <= new Date()) {
+            Alert.alert(
+                'Do you like this app?',
+                'If you do, please rate it on Google Play',
+                [
+                    { text: 'NOT NOW', onPress: () => this.delayRating() },
+                    { text: 'OK', onPress: () => this.rate() }
+                ],
+                { cancelable: false }
+            );
+        }
+    }
+
+    async rate() {
+        const opened = await Linking.openURL('http://play.google.com/store/apps/details?id=com.dingulu');
+        await AsyncStorage.setItem('rated', 'true');
+    }
+
+    async delayRating() {
+        await AsyncStorage.setItem('installed', dateString(new Date(), 'key'));
+    }
+
     async scheduleNotification() {
         const notificationTime = await AsyncStorage.getItem('notificationTime');
         if (notificationTime) return;
@@ -33,10 +72,6 @@ class Dingulu extends React.Component {
                 });
             }
         });
-    }
-    componentWillMount() {
-        this.scheduleNotification();
-        this.backup();
     }
 
     async backup() {

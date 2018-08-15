@@ -48,22 +48,22 @@ class EditTag extends React.Component {
         });
     }
 
-    async updateName(name, index, oldName) {
+    async updateTag(name, index, oldName, levels) {
         const tags = this.state.tags.slice();
         const tagColors = { ...this.state.tagColors };
         const tagLevels = { ...this.state.tagLevels };
 
         name = name.trim().toLowerCase();
 
-        if (name === oldName || !name) return;
+        if (!name) return;
 
-        if (tags.map(t => t.name).includes(name)) {
+        /*if (tags.map(t => t.name).includes(name)) {
             alert('Label already exists');
             return;
-        }
+        }*/
 
         tagColors[name] = tagColors[oldName];
-        tagLevels[name] = tagLevels[oldName];
+        tagLevels[name] = levels;
         tags[index].name = name;
 
         await AsyncStorage.setItem('tags', JSON.stringify(tags));
@@ -122,12 +122,6 @@ class EditTag extends React.Component {
         });
     }
 
-    async updateLevels(name, levels) {
-        const tagLevels = { ...this.state.tagLevels };
-        tagLevels[name] = levels;
-        await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
-    }
-
     render() {
         if (!this.state.isReady) return <ActivityIndicator />;
         const { tagColors, tagLevels } = this.state;
@@ -171,9 +165,8 @@ class EditTag extends React.Component {
                             color={tagColors[item.name]}
                             index={index}
                             levels={tagLevels[item.name]}
-                            updateName={this.updateName.bind(this)}
+                            updateTag={this.updateTag.bind(this)}
                             updateColor={this.updateColor.bind(this)}
-                            updateLevels={this.updateLevels.bind(this)}
                             remove={this.remove.bind(this)}
                         />
                     )}

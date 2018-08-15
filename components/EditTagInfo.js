@@ -28,8 +28,7 @@ class EditTagInfo extends React.Component {
     }
 
     save() {
-        this.props.updateName(this.state.name, this.props.index, this.props.name);
-        this.props.updateLevels(this.state.name, this.state.levels);
+        this.props.updateTag(this.state.name, this.props.index, this.props.name, this.state.levels);
         this.setState({ editing: false });
     }
 
