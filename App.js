@@ -1,6 +1,6 @@
 import React from 'react';
 import { DeviceEventEmitter, AsyncStorage, NativeModules, Alert, Linking } from 'react-native';
-import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation';
 import Day from './screens/Day';
 import Stat from './screens/Stat';
 import EditTag from './screens/EditTag';

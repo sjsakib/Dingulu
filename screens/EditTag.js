@@ -57,22 +57,27 @@ class EditTag extends React.Component {
 
         if (!name) return;
 
-        /*if (tags.map(t => t.name).includes(name)) {
+        //update levels
+        tagLevels[name] = levels;
+        await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
+        this.setState({ tagLevels });
+
+        //update name
+        if (name === oldName) return;
+
+        if (tags.map(t => t.name).includes(name)) {
             alert('Label already exists');
             return;
-        }*/
+        }
 
         tagColors[name] = tagColors[oldName];
-        tagLevels[name] = levels;
         tags[index].name = name;
 
         await AsyncStorage.setItem('tags', JSON.stringify(tags));
         await AsyncStorage.setItem('tagColors', JSON.stringify(tagColors));
-        await AsyncStorage.setItem('tagLevels', JSON.stringify(tagLevels));
         this.setState({
             tags,
-            tagColors,
-            tagLevels
+            tagColors
         });
     }
 
@@ -207,7 +212,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     ad: {
-        alignItems: 'center',
+        alignItems: 'center'
     }
 });
 

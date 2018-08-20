@@ -115,7 +115,7 @@ class EditTagInfo extends React.Component {
                 <Modal
                     transparent
                     visible={this.state.editing}
-                    onRequestClose={() => this.setState({ editing: false })}>
+                    onRequestClose={() => this.save()}>
                     <View style={styles.modal}>
                         <Text style={styles.title}>Editing Label: {this.state.name}</Text>
                         <Text style={styles.label}>Name</Text>

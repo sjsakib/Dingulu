@@ -101,8 +101,8 @@ android {
         applicationId "com.dingulu"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 35
-        versionName "2.03"
+        versionCode 36
+        versionName "2.04"
         /*ndk {
             abiFilters "armeabi-v7a", "x86"
         }*/
