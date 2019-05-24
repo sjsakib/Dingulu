@@ -14,6 +14,7 @@ const { RNGoogleSignin } = NativeModules;
 
 class Dingulu extends React.Component {
     componentWillMount() {
+        console.log('mounted....')
         this.scheduleNotification();
         this.backup();
         this.promptRating();
@@ -54,9 +55,13 @@ class Dingulu extends React.Component {
 
     async scheduleNotification() {
         const notificationTime = await AsyncStorage.getItem('notificationTime');
-        if (notificationTime) return;
 
-        scheduleNotification(22, 0);
+        let hour = 22, minute = 0;
+        if (notificationTime) {
+            [hour, minute] = notificationTime.split(':').map(Number)
+        }
+
+        scheduleNotification(hour, minute);
 
         PushNotification.registerNotificationActions(['Remind Later']);
         DeviceEventEmitter.addListener('notificationActionReceived', action => {

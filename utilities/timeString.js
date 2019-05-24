@@ -1,6 +1,6 @@
 export default function timeString(hour, minute) {
     let isAm = true;
-    if (hour > 12) {
+    if (hour >= 12) {
         hour -= 12;
         isAm = false;
     }
