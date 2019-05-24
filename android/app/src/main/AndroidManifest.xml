@@ -26,6 +26,11 @@
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
 
+      <!-- Admob -->
+      <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8928993131403831~8497147710"/>
+
       <!-- Push Notification -->
       <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
       <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
