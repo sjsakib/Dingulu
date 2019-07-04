@@ -4,7 +4,6 @@ import {
     Text,
     Button,
     StyleSheet,
-    NativeModules,
     AsyncStorage,
     TouchableNativeFeedback,
     TimePickerAndroid,
@@ -15,8 +14,6 @@ import { backup, restore, timeString, scheduleNotification, headerStyle } from '
 import { GoogleSignin } from 'react-native-google-signin';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { AdMobBanner } from 'react-native-admob';
-
-const { RNGoogleSignin } = NativeModules;
 
 class Settings extends React.Component {
     static navigationOptions = {
@@ -76,16 +73,17 @@ class Settings extends React.Component {
         }
 
         try {
-            const user = await GoogleSignin.signIn();
+            const { user } = await GoogleSignin.signIn();
             this.setState({ googleAccount: user.email });
             await AsyncStorage.setItem('googleAccount', user.email);
 
-            const accessToken = await RNGoogleSignin.getAccessToken(user);
+            const { accessToken } = await GoogleSignin.getTokens();
 
             if (!(await restore(accessToken))) {
                 await backup(accessToken);
             }
         } catch (e) {
+            console.log(e);
             ToastAndroid.show('Failed. Make sure your internet connection is working', ToastAndroid.LONG);
         }
     }
@@ -95,9 +93,9 @@ class Settings extends React.Component {
         await GoogleSignin.configure({
             scopes: ['https://www.googleapis.com/auth/drive.appdata']
         });
-        const user = await GoogleSignin.currentUserAsync();
+        const user = await GoogleSignin.getCurrentUser();
         if (!user) return;
-        const accessToken = await RNGoogleSignin.getAccessToken(user);
+        const { accessToken } = await GoogleSignin.getTokens();
 
         try {
             await backup(accessToken);

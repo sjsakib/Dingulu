@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeviceEventEmitter, AsyncStorage, NativeModules, Alert, Linking } from 'react-native';
+import { DeviceEventEmitter, AsyncStorage, Alert, Linking } from 'react-native';
 import { createDrawerNavigator } from 'react-navigation';
 import Day from './screens/Day';
 import Stat from './screens/Stat';
@@ -10,11 +10,8 @@ import scheduleNotification from './utilities/scheduleNotification';
 import PushNotification from 'react-native-push-notification';
 import { GoogleSignin } from 'react-native-google-signin';
 
-const { RNGoogleSignin } = NativeModules;
-
 class Dingulu extends React.Component {
     componentWillMount() {
-        console.log('mounted....')
         this.scheduleNotification();
         this.backup();
         this.promptRating();
@@ -83,9 +80,9 @@ class Dingulu extends React.Component {
         await GoogleSignin.configure({
             scopes: ['https://www.googleapis.com/auth/drive.appdata']
         });
-        const user = await GoogleSignin.currentUserAsync();
+        const user = await GoogleSignin.getCurrentUser();
         if (!user) return;
-        const accessToken = await RNGoogleSignin.getAccessToken(user);
+        const { accessToken } = await GoogleSignin.getTokens();
         backup(accessToken);
     }
 

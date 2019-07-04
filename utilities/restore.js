@@ -25,6 +25,7 @@ async function restore(accessToken) {
         await AsyncStorage.multiSet(data);
         ToastAndroid.show('Restored successfully!', ToastAndroid.SHORT);
     } catch (e) {
+        console.log(e);
         ToastAndroid.show('Failed to restore. Try signing in again.', ToastAndroid.LONG);
     }
 
