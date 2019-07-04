@@ -35,7 +35,10 @@ allprojects {
 ext {
     buildToolsVersion = "26.0.3"
     minSdkVersion = 16
-    compileSdkVersion = 26
+    compileSdkVersion = 28
     targetSdkVersion = 26
     supportLibVersion = "26.1.0"
+    googlePlayServicesAuthVersion = "15.0.1"
+    googlePlayServicesVersion = "16.1.0"
+    firebaseVersion = "17.6.0"
 }
